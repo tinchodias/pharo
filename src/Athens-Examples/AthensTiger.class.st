@@ -1,35 +1,32 @@
 "
-self runDemo 
+I am a tiger in a Athens canvas.
+
+I know how draw the tiger with the collaboration of AthensParts.
+I also know how to decode such AthensParts from strings in my class-side.
 "
 Class {
-	#name : #VGTigerDemo,
-	#superclass : #StandardWindow,
+	#name : #AthensTiger,
+	#superclass : #Object,
 	#instVars : [
 		'surface',
-		'paths',
-		'rotationSpeed',
 		'rotation',
-		'extent',
 		'scale',
-		'translation',
-		'time',
-		'frames',
-		'zoom'
+		'zoom',
+		'position',
+		'parts'
 	],
-	#category : #'Athens-Examples-Demos'
+	#category : #'Athens-Examples-Utilities'
 }
 
 { #category : #private }
-VGTigerDemo class >> checkDataSizes [
+AthensTiger class >> checkDataSizes [
 	<script>
 	self assert: (self commands size = self tigerCommandCount).
 	self assert: (self tigerPointsCount = self tigerPoints size).
 ]
 
 { #category : #private }
-VGTigerDemo class >> commands [
-" VGTigerDemo commands 
-"
+AthensTiger class >> commands [
 	| pt str |
 	
 	pt := 1.
@@ -48,19 +45,20 @@ VGTigerDemo class >> commands [
 	^ str
 ]
 
-{ #category : #run }
-VGTigerDemo class >> runDemo [
-	<example>
-	^ self new runDemo
+{ #category : #'instance creation' }
+AthensTiger class >> on: anAthensSurface [
+	^ self basicNew
+		initializeWith: anAthensSurface;
+		yourself
 ]
 
 { #category : #private }
-VGTigerDemo class >> tigerCommandCount [ 
+AthensTiger class >> tigerCommandCount [ 
 	^ 4142
 ]
 
 { #category : #'huge data' }
-VGTigerDemo class >> tigerCommands [
+AthensTiger class >> tigerCommands [
 
 	^ #(
 'FNBMMCCCENS'
@@ -274,29 +272,29 @@ VGTigerDemo class >> tigerCommands [
 ]
 
 { #category : #private }
-VGTigerDemo class >> tigerMaxX [ 
+AthensTiger class >> tigerMaxX [ 
 	^ 612.0
 ]
 
 { #category : #private }
-VGTigerDemo class >> tigerMaxY [ 
+AthensTiger class >> tigerMaxY [ 
 	^ 792.0
 ]
 
 { #category : #private }
-VGTigerDemo class >> tigerMinX [ 
+AthensTiger class >> tigerMinX [ 
 	^ 0.0
 
 ]
 
 { #category : #private }
-VGTigerDemo class >> tigerMinY [ 
+AthensTiger class >> tigerMinY [ 
 	^ 0.0
 
 ]
 
 { #category : #'huge data' }
-VGTigerDemo class >> tigerPoints [
+AthensTiger class >> tigerPoints [
 
 	^ #(10 0 1
 1 1 1 1 1 5 85.25 487.75 85.25 487.75
@@ -2002,170 +2000,173 @@ VGTigerDemo class >> tigerPoints [
 ]
 
 { #category : #private }
-VGTigerDemo class >> tigerPointsCount [ 
+AthensTiger class >> tigerPointsCount [ 
 	^ 16988
 ]
 
-{ #category : #conversion }
-VGTigerDemo >> convertPathData2 [
-
-	| paths pathData cmdStream ptStream fillBlocks strokeBlocks capBlocks joinBlocks cmdBlocks |
-	
-	paths := OrderedCollection new.
-	cmdStream := self class commands readStream.
-	ptStream := self class tigerPoints readStream.
-	pathData := nil.
-	
-	fillBlocks := { 
-		"N" [].
-		"F" [ pathData addFill ].
-		"E" [ pathData addFill; fillRule: #VGEVENODD ] }.
-
-	strokeBlocks := {
-		"N" [].
-		"S" [ pathData addStroke ] }.
-	
-	capBlocks := {
-		"B" [ pathData capStyle: #VGCAPBUTT ].
-		"R" [ pathData capStyle: #VGCAPROUND ].
-		"S" [ pathData capStyle: #VGCAPSQUARE ]	}.
-	
-	joinBlocks := {
-		"M" [ pathData joinStyle: #VGJOINMITER ].
-		"R" [ pathData joinStyle: #VGJOINROUND ].
-		"B" [ pathData joinStyle: #VGJOINBEVEL ] }.
-		
-	cmdBlocks := {		
-		"M"[:s | s moveToX: ptStream next Y: ptStream next ].
-		"L" [:s | s lineToX: ptStream next Y: ptStream next ].
-		"C"	[:s | s  
-			curveVia: (ptStream next @ ptStream next)
-			and: (ptStream next @ ptStream next)
-			to: (ptStream next @ ptStream next) ].
-		"E"	[:s | s close ] }.
-
-	[		
-		pathData := AthensTigerShape new.
-
-		fillBlocks := { 
-			"N" [].
-			"F" [ pathData addFill; fillRule: #VGNONZERO.  ].
-			"E" [ pathData addFill; fillRule: #VGEVENODD ] }.
-
-		strokeBlocks := {
-			"N" [].
-			"S" [ pathData addStroke ] }.
-		
-		" fill type "
-		pathData fillRule: #VGNONZERO.
-		(fillBlocks at: ('NFE' indexOf: cmdStream next)) value.
-
-		" stroke type "	
-		(strokeBlocks at: ('NS' indexOf: cmdStream next)) value.
-
-		" line cap "
-		(capBlocks at: ('BRS' indexOf: cmdStream next)) value.
-	
-		" line join "
-		(joinBlocks at: ('MRB' indexOf: cmdStream next)) value.
-	
-		" the rest of stroke attributes "
-		pathData miterLimit: ptStream next.
-		pathData strokeWidth: ptStream next.
-
-		" paints "
-		pathData strokePaint: ((Color r: ptStream next g: ptStream next b: ptStream next )).
-		
-		pathData fillPaint: ((Color r: ptStream next g: ptStream next b: ptStream next )).
-		
-		pathData setPath: (
-			surface createPath: [:builder |
-				builder absolute.
-				(ptStream next asInteger) timesRepeat: [
-					(cmdBlocks at: ('MLCE' indexOf: cmdStream next) ) value: builder.
-				]
-				]
-		).
-
-		paths add: pathData.
-		cmdStream atEnd
-	] whileFalse.
-
-	paths do: [:ea |
-		self assert: ea fillRule = #VGNONZERO.	
-		ea prepareFor: surface
-		].
-	
-	self assert: (ptStream atEnd).
-	
-	^ paths
-]
-
 { #category : #run }
-VGTigerDemo >> drawOn: aCanvas [
+AthensTiger >> draw [
+	surface drawDuring: [ :canvas | 
+		canvas pathTransform loadIdentity.
+		canvas
+			setPaint: Color white;
+			drawShape: (0@0 corner: surface extent).
+			
+		canvas pathTransform
+			translateX: 0.5 * (surface extent x - (self class tigerMaxX * scale * zoom))
+				Y: surface extent y / -12.0;
+			scaleBy: scale * zoom;
+			translateX: self class tigerMaxX * 0.5
+				Y: self class tigerMaxY * 0.5;
+			scaleBy: 0.8;
+			rotateByDegrees: rotation;
+			translateX: (self class tigerMaxX * -0.5) - position x
+				Y: (self class tigerMaxY * -0.5) + position y.
 
-	super drawOn: aCanvas.
-	aCanvas drawImage: surface asForm at: self bounds origin + (10@self labelArea height).
-
+		parts do: [ :each | each renderOn: canvas ] ].
 
 ]
 
 { #category : #initialization }
-VGTigerDemo >> initialize [ 
+AthensTiger >> initializeWith: anAthensSurface [
 
-	super initialize.
-	surface := AthensCairoSurface extent: 400@400.
+	self initialize.
+	surface := anAthensSurface.
+	parts := self readParts.
+	rotation := 180.0.
+	scale := 0.5.
+	zoom := 1.0.
+	position := 0@0.
+]
+
+{ #category : #accessing }
+AthensTiger >> position [
+	^ position
+]
+
+{ #category : #accessing }
+AthensTiger >> position: anObject [
+	position := anObject
+]
+
+{ #category : #conversion }
+AthensTiger >> readParts [
+
+	| results currentPart commandStream pointStream fillBlocks strokeBlocks capBlocks joinBlocks cmdBlocks |
 	
-	paths := self convertPathData2.
-	rotationSpeed := 1.
-	rotation := 0.
-	extent := surface extent.
-	scale := extent x / self class tigerMaxY.
-	translation := 0 @ 0.
-	frames := 0.
-
-	self title: 'VGTigerDemo'.
-
-]
-
-{ #category : #run }
-VGTigerDemo >> runDemo [
-
-	self open.
-	self extent: 400@400.	
-	self startStepping.
-]
-
-{ #category : #run }
-VGTigerDemo >> step [ 
-
-	rotation := rotation + rotationSpeed.
-	frames := frames + 1.
-	zoom := (frames / 100) sin abs.
+	results := OrderedCollection new.
+	commandStream := self class commands readStream.
+	pointStream := self class tigerPoints readStream.
+	currentPart := nil.
 	
-	surface
-			drawDuring: [ :can | 
-				can pathTransform loadIdentity.
-					can
-						setPaint: Color white;
-						drawShape: (0 @ 0 corner: surface extent).
-					can pathTransform
-						translateX: 0.5 * (extent x - (self class tigerMaxX * scale * zoom))
-							Y: extent y / -12.0;
-						scaleBy: scale * zoom;
-						translateX: self class tigerMaxX * 0.5
-							Y: self class tigerMaxY * 0.5;
-						scaleBy: 0.8;
-						rotateByDegrees: rotation;
-						translateX: self class tigerMaxX * -0.5
-							Y: self class tigerMaxY * -0.5.
-					paths do: [ :each | each renderOn: can ] ].
+	fillBlocks := { 
+		"N" [].
+		"F" [ currentPart addFill ].
+		"E" [ currentPart addFill; fillRule: #VGEVENODD ] }.
 
-	self changed
+	strokeBlocks := {
+		"N" [].
+		"S" [ currentPart addStroke ] }.
+	
+	capBlocks := {
+		"B" [ currentPart capStyle: #VGCAPBUTT ].
+		"R" [ currentPart capStyle: #VGCAPROUND ].
+		"S" [ currentPart capStyle: #VGCAPSQUARE ]	}.
+	
+	joinBlocks := {
+		"M" [ currentPart joinStyle: #VGJOINMITER ].
+		"R" [ currentPart joinStyle: #VGJOINROUND ].
+		"B" [ currentPart joinStyle: #VGJOINBEVEL ] }.
+		
+	cmdBlocks := {		
+		"M"[:s | s moveToX: pointStream next Y: pointStream next ].
+		"L" [:s | s lineToX: pointStream next Y: pointStream next ].
+		"C"	[:s | s  
+			curveVia: (pointStream next @ pointStream next)
+			and: (pointStream next @ pointStream next)
+			to: (pointStream next @ pointStream next) ].
+		"E"	[:s | s close ] }.
+
+	[		
+		currentPart := AthensTigerPart new.
+
+		fillBlocks := { 
+			"N" [].
+			"F" [ currentPart addFill; fillRule: #VGNONZERO.  ].
+			"E" [ currentPart addFill; fillRule: #VGEVENODD ] }.
+
+		strokeBlocks := {
+			"N" [].
+			"S" [ currentPart addStroke ] }.
+		
+		" fill type "
+		currentPart fillRule: #VGNONZERO.
+		(fillBlocks at: ('NFE' indexOf: commandStream next)) value.
+
+		" stroke type "	
+		(strokeBlocks at: ('NS' indexOf: commandStream next)) value.
+
+		" line cap "
+		(capBlocks at: ('BRS' indexOf: commandStream next)) value.
+	
+		" line join "
+		(joinBlocks at: ('MRB' indexOf: commandStream next)) value.
+	
+		" the rest of stroke attributes "
+		currentPart miterLimit: pointStream next.
+		currentPart strokeWidth: pointStream next.
+
+		" paints "
+		currentPart strokePaint: ((Color r: pointStream next g: pointStream next b: pointStream next )).
+		
+		currentPart fillPaint: ((Color r: pointStream next g: pointStream next b: pointStream next )).
+		
+		currentPart setPath: (
+			surface createPath: [:builder |
+				builder absolute.
+				(pointStream next asInteger) timesRepeat: [
+					(cmdBlocks at: ('MLCE' indexOf: commandStream next) ) value: builder.
+				] ] ).
+
+		results add: currentPart.
+		commandStream atEnd
+	] whileFalse.
+
+	results do: [:ea |
+		self assert: ea fillRule = #VGNONZERO.	
+		ea prepareFor: surface ].
+	
+	self assert: pointStream atEnd.
+	
+	^ results
 ]
 
-{ #category : #run }
-VGTigerDemo >> stepTime [ 
+{ #category : #accessing }
+AthensTiger >> rotation [
+	^ rotation
+]
 
-	^ 50
+{ #category : #accessing }
+AthensTiger >> rotation: aNumber [
+	rotation := aNumber
+]
+
+{ #category : #accessing }
+AthensTiger >> scale [
+	^ scale
+]
+
+{ #category : #accessing }
+AthensTiger >> scale: aNumber [
+	scale := aNumber
+]
+
+{ #category : #accessing }
+AthensTiger >> zoom [
+	^ zoom
+]
+
+{ #category : #accessing }
+AthensTiger >> zoom: aNumber [
+	zoom := aNumber
 ]
