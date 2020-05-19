@@ -544,6 +544,11 @@ AthensCairoSurface >> fillRectangle: aRectangle withSolidColor: aColor [
 ]
 
 { #category : #private }
+AthensCairoSurface >> finish [
+	^ self ffiCall: #( void cairo_surface_finish (self) )
+]
+
+{ #category : #private }
 AthensCairoSurface >> flush [
 	^ self ffiCall: #( void cairo_surface_flush (self) )
 ]
@@ -666,6 +671,11 @@ AthensCairoSurface >> privateHeight [
 { #category : #initialization }
 AthensCairoSurface >> resourceData [
 	^ { handle value. id. context handle }
+]
+
+{ #category : #private }
+AthensCairoSurface >> showPage [
+	^ self ffiCall: #( void cairo_surface_show_page (self) )
 ]
 
 { #category : #accessing }
