@@ -1,5 +1,8 @@
 "
-Do not rearrange these fields!
+I represent a FreeType face.
+
+I expand the external object API of my superclass with useful protocol, and provide instance sharing protocol in class-side.
+
 "
 Class {
 	#name : #FreeTypeFace,
@@ -10,53 +13,62 @@ Class {
 		'fileContentsExternalMemory',
 		'hasKerning'
 	],
+	#classInstVars : [
+		'instancesWeakSet'
+	],
 	#category : #'FreeType-Fonts'
 }
-
-{ #category : #'font dirs' }
-FreeTypeFace class >> fontPathFor: aFilename [
-	"aFilename is local. Try hard to return a valid path to be handed to freetype library"
-	
-	"temporary solution ;-)"
-	^ (FileSystem disk workingDirectory / 'Fonts' / aFilename) fullName
-]
 
 { #category : #'instance creation' }
 FreeTypeFace class >> fromBytes: aByteArray index: anInteger [
 	"share alike instances"
-	| newFace |
 	
-	self allInstancesDo: [:inst |
-		(inst fileContentsExternalMemoryBytes = aByteArray and: [inst index = anInteger])
-			ifTrue: [^inst "validate"]].
-	newFace := self basicNew
-		fileContentsExternalMemory: (FreeTypeExternalMemory bytes: aByteArray);
-		index: anInteger;
-		autoRelease;
-		yourself.
-	^ newFace
+	^ self instancesWeakSet
+		detect: [ :face |
+			face fileContentsExternalMemoryBytes = aByteArray and: [
+			face index = anInteger] ]
+		ifNone:[ 
+			self newInWeakSet
+				fileContentsExternalMemory: (FreeTypeExternalMemory bytes: aByteArray);
+				index: anInteger;
+				autoRelease;
+				yourself ]
+
 ]
 
 { #category : #'instance creation' }
 FreeTypeFace class >> fromFile: aFileName index: anInteger [
 	"share alike instances"
-	| file |
-	file := aFileName asFileReference.
-	self rememberFontDir: file parent fullName .
-	
-	self allInstancesDo: [:inst |
-		(inst filename = aFileName and: [inst index = anInteger])
-			ifTrue: [^inst "validate"]].
-		
-	^ (self basicNew)
-		filename: aFileName;
-		index: anInteger;
-		autoRelease;
-		yourself
+
+	^ self instancesWeakSet
+		detect: [ :face |
+			face filename = aFileName and: [
+			face index = anInteger] ]
+		ifNone:[
+			self newInWeakSet
+				filename: aFileName;
+				index: anInteger;
+				autoRelease;
+				yourself ]
+
 ]
 
-{ #category : #'font dirs' }
-FreeTypeFace class >> rememberFontDir: aDirecory [
+{ #category : #'instance creation' }
+FreeTypeFace class >> instancesWeakSet [
+
+	^ instancesWeakSet ifNil: [ 
+		  instancesWeakSet := WeakSet new
+			         addAll: self allInstances;
+			         yourself ]
+]
+
+{ #category : #'instance creation' }
+FreeTypeFace class >> newInWeakSet [
+
+	| anInstance |
+	anInstance := self basicNew.
+	self instancesWeakSet add: anInstance.
+	^ anInstance
 ]
 
 { #category : #initialization }
