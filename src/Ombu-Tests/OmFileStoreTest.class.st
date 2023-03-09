@@ -167,7 +167,29 @@ OmFileStoreTest >> testLoadFromFile [
 			refresh;
 			yourself.
 
+	self assert: store entriesCount equals: 1.
+
 	self
 		assert: (loadedStore entries collect: #content as: Array)
 		equals: #(42)
+]
+
+{ #category : #tests }
+OmFileStoreTest >> testLoadFromFileTrickyCase [
+	| loadedStore |
+	store newEntry: (OmEntry content: 'OmEntry {').
+	store flush.
+
+	loadedStore :=
+		(OmFileStore
+			named: store globalName
+			inDirectory: self directoryForTests)
+			refresh;
+			yourself.
+
+	self assert: store entriesCount equals: 1.
+
+	self
+		assert: (loadedStore entries collect: #content as: Array)
+		equals: #('OmEntry {')
 ]
