@@ -82,6 +82,13 @@ CmdShortcutActivation class >> settingInputWidgetForNode: aShortcutSetting [
 	^ theme newRow: {catcherMorph}
 ]
 
+{ #category : 'accessing' }
+CmdShortcutActivation >> action [
+	"Answer a <CompiledMethod> defining the receiver's action"
+
+	^ self annotatedClass class lookupSelector: self declarationSelector
+]
+
 { #category : 'settings' }
 CmdShortcutActivation >> buildSettingNodeOn: aBuilder [
 	| nodeBuilder |
@@ -89,6 +96,15 @@ CmdShortcutActivation >> buildSettingNodeOn: aBuilder [
 		nodeClass: CmdShortcutSetting name: self id.
 	nodeBuilder node item shortcutActivation: self.
 	^nodeBuilder
+]
+
+{ #category : 'printing' }
+CmdShortcutActivation >> description [
+	"Answer a <String> describing the receiver. We use the `action` method comments to retrieve the description"
+
+	^ self action comment
+		ifNil: [ String empty ]
+		ifNotNil: [ : comm | comm ]
 ]
 
 { #category : 'accessing' }
@@ -102,11 +118,37 @@ CmdShortcutActivation >> keyCombination: anObject [
 ]
 
 { #category : 'printing' }
+CmdShortcutActivation >> name [
+
+	^ self declarationSelector asString
+]
+
+{ #category : 'printing' }
 CmdShortcutActivation >> printOn: aStream [
 	super printOn: aStream.
 	aStream nextPut: $(.
 	keyCombination printOn: aStream.
 	aStream nextPut: $)
+]
+
+{ #category : 'printing' }
+CmdShortcutActivation >> scope [
+	"The receiver's scope is the package name where is installed"
+
+	^ self annotatedClass packageName
+]
+
+{ #category : 'printing' }
+CmdShortcutActivation >> scopeName [
+
+	^ self scope asString
+]
+
+{ #category : 'printing' }
+CmdShortcutActivation >> shortcut [
+	"Answer a <String> representation of the receiver's key combination"
+
+	^ self keyCombination asString
 ]
 
 { #category : 'command execution' }
