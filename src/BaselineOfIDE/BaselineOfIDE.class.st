@@ -131,7 +131,6 @@ BaselineOfIDE >> baseline: spec [
 		self drTests: spec.
 		self microdown: spec.
 		spec package: #'BeautifulComments'  with: [ spec requires:  #( 'Microdown') ].
-		self documentBrowserCore: spec.
 		self welcomeBrowser: spec.
 		self roassal: spec.
 		
