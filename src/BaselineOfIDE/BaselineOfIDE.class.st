@@ -238,7 +238,7 @@ BaselineOfIDE >> microdown: spec [
 
 	spec baseline: 'Microdown' with: [ 
 		spec 
-			repository: (self class environment at: #BaselineOfPharo) microdownRepository;
+			repository: (self classNamed: #BaselineOfPharo) microdownRepository;
 			loads: #('RichText' 'Tests' 'ForPharo') ]
 ]
 
