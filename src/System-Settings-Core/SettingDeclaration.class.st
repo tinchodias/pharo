@@ -116,8 +116,9 @@ SettingDeclaration >> addToList: anItem [
 
 { #category : 'accessing' }
 SettingDeclaration >> default [
+
 	^ default
-		ifNil: [ default := String empty ]
+		ifNil: [ default := self findDeclarationDefault ]
 ]
 
 { #category : 'accessing' }
@@ -164,6 +165,13 @@ SettingDeclaration >> findCurrentSettingValue [
 	^ self targetSelector
 		ifNil: [ (Smalltalk at: targetSymbolOrObject) perform: self getSelector ]
 		ifNotNil: [ : s | ((Smalltalk at: targetSymbolOrObject) perform: s) perform: self getSelector].
+]
+
+{ #category : 'accessing' }
+SettingDeclaration >> findDeclarationDefault [
+	"Answer a default object according to the receiver's type"
+	
+	^ self typeClass settingDeclarationDefault
 ]
 
 { #category : 'accessing' }
