@@ -239,7 +239,7 @@ BaselineOfIDE >> microdown: spec [
 	spec baseline: 'Microdown' with: [ 
 		spec 
 			repository: (self classNamed: #BaselineOfPharo) microdownRepository;
-			loads: #('RichText' 'Tests') ]
+			loads: #('RichText' 'Tests' 'ForPharo') ]
 ]
 
 { #category : 'baselines - dependencies' }
