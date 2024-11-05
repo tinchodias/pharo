@@ -171,7 +171,9 @@ SettingDeclaration >> findCurrentSettingValue [
 SettingDeclaration >> findDeclarationDefault [
 	"Answer a default object according to the receiver's type"
 	
-	^ self typeClass settingDeclarationDefault
+	^ self typeClass 
+		ifNotNil: [ : tClass | tClass settingDeclarationDefault ]
+		ifNil: [ String empty ]
 ]
 
 { #category : 'accessing' }
