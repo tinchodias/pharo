@@ -132,9 +132,11 @@ ClyClassCreationToolMorph >> resetStateForRemoval [
 	" A package was removed from the receiver's browser, update the receiver's text "
 
 	self package: nil.
-	textModel setInitialText: self classTemplate.
-	textMorph hasEditingConflicts: false.
-	textMorph changed.
+	textModel ifNotNil: [ : t | 
+		t setInitialText: self classTemplate.
+			textMorph hasEditingConflicts: false.
+	textMorph changed. ].
+
 
 ]
 

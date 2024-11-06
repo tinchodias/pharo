@@ -736,12 +736,11 @@ UITheme >> chooseColorIn: aThemedMorph title: aString color: aColor for: aBlock 
 UITheme >> chooseDirectoryIn: aThemedMorph title: title path: path [
 	"Answer the result of a file dialog with the given title, choosing directories only."
 
-	| dialog |
-	dialog := (FileDialogWindow newWithTheme: aThemedMorph theme)
-		title: title;
-		answerDirectory.
-	path ifNotNil: [ dialog selectPath: path ].
-	^ dialog openModal answer
+	^ self directoryDialogWindowClass new
+		  defaultFolder: (path ifNil: [ StFileSystemModel defaultDirectory ]);
+		  title: (title ifNil: [ 'Choose Directory' translated ]);
+		  openModal;
+		  selectedEntry
 ]
 
 { #category : 'services' }
@@ -761,18 +760,19 @@ UITheme >> chooseExistingFileReferenceIn: aThemedMorph title: title extensions: 
 	path and preview type.
 	Answer nil or a filename."
 
-	| dialog pathFileReference |
-	pathFileReference := path asFileReference.
-	dialog := FileDialogWindow basicNew
-		basicTheme: aThemedMorph theme;
-		previewType: preview;
-		fileNameText: pathFileReference basename;
-		initialize;
-		title: title;
-		answerPathName.
-	exts ifNotNil: [ dialog validExtensions: exts ].
-	path ifNotNil: [ dialog selectPath: pathFileReference pathString ].
-	^ dialog openModal answer ifNotNil: #asFileReference
+	| dialog |
+	
+	dialog := self fileDialogWindowClass new.
+	exts 
+		ifNotNil: [ dialog filter: (StCustomExtensionsFilter extensions: exts) ].
+	path 
+		ifNotNil: [ dialog nameText: path basename ].
+	^ dialog
+		defaultFolder: (path ifNil: [ StFileSystemModel defaultDirectory ]);
+		title: (title ifNil: [ 'Choose File' translated ]);
+		openModal;
+		selectedEntry
+
 ]
 
 { #category : 'services' }
@@ -781,15 +781,18 @@ UITheme >> chooseFileIn: aThemedMorph title: title extensions: exts path: path p
 	Answer nil or a filename."
 
 	| dialog |
-	dialog := FileDialogWindow basicNew
-		basicTheme: aThemedMorph theme;
-		previewType: preview;
-		initialize;
-		title: title;
-		answerFileEntry.
-	exts ifNotNil: [ dialog validExtensions: exts ].
-	path ifNotNil: [ dialog selectPath: path ].
-	^ dialog openModal answer
+	
+	dialog := self fileDialogWindowClass new.
+	exts 
+		ifNotNil: [ dialog filter: (StCustomExtensionsFilter extensions: exts) ].
+	path 
+		ifNotNil: [ dialog nameText: path basename ].
+	^ dialog
+		defaultFolder: (path ifNil: [ StFileSystemModel defaultDirectory ]);
+		title: (title ifNil: [ 'Choose File' translated ] ifNotNil: [ title ]);
+		openModal;
+		selectedEntry
+
 ]
 
 { #category : 'services' }
@@ -798,15 +801,18 @@ UITheme >> chooseForSaveFileReferenceIn: aThemedMorph title: title extensions: e
 	path and preview type.
 	Answer nil or a filename."
 
-	| dialog pathFileReference |
-	pathFileReference := path asFileReference.
-	dialog := (FileDialogWindow newWithTheme: aThemedMorph theme)
-		title: title;
-		fileNameText: pathFileReference basename;
-		answerSaveFile.
-	exts ifNotNil: [ dialog validExtensions: exts ].
-	path ifNotNil: [ dialog selectPath: path ].
-	^ dialog openModal answer
+	| dialog |
+	
+	dialog := self fileSaveDialogWindowClass new.
+	exts 
+		ifNotNil: [ dialog filter: (StCustomExtensionsFilter extensions: exts) ].
+	path 
+		ifNotNil: [ dialog nameText: path asFileReference basename ].
+	^ dialog
+		defaultFolder: (path ifNil: [ StFileSystemModel defaultDirectory ]);
+		title: (title ifNil: [ 'Save as' translated ] ifNotNil: [ title ]);
+		openModal;
+		selectedEntry
 ]
 
 { #category : 'services' }
@@ -816,19 +822,17 @@ UITheme >> chooseFullFileNameIn: aThemedMorph title: title patterns: patterns pa
 	Answer nil or a filename."
 
 	| dialog |
-	dialog := FileDialogWindow basicNew
-		basicTheme: aThemedMorph theme;
-		previewType: preview;
-		initialize;
-		title: title;
-		answerPathName.
-	patterns
-		ifNotNil: [ dialog
-				fileSelectionBlock: [ :de |
-					(dialog defaultFileSelectionBlock value: de)
-						and: [ de isDirectory or: [ patterns anySatisfy: [ :pat | pat match: de name ] ] ] ] ].
-	path ifNotNil: [ dialog selectPath: path ].
-	^ dialog openModal answer
+	
+	dialog := self fileDialogWindowClass new.
+	path 
+		ifNotNil: [ dialog nameText: path basename ].
+	^ dialog
+		defaultFolder: (path ifNil: [ StFileSystemModel defaultDirectory ]);
+		title: (title ifNil: [ 'Choose File' translated ]);
+		openModal;
+		selectedEntry.
+	
+
 ]
 
 { #category : 'services' }
@@ -1497,6 +1501,14 @@ UITheme >> diffRemovedLinesBackgroundColor [
 	^ colorPalette diffRemovedLinesBackgroundColor
 ]
 
+{ #category : 'services' }
+UITheme >> directoryDialogWindowClass [
+
+	^ self class environment 
+		at: #StOpenDirectoryPresenter
+		ifAbsent: [  self error: 'Directory dialog support is missing in the image' ]
+]
+
 { #category : 'accessing - colors' }
 UITheme >> disabledColor [
 
@@ -1831,6 +1843,22 @@ UITheme >> fadeCheckboxWhenDisabled [
 { #category : 'accessing' }
 UITheme >> fadedBackgroundWindows [
 	^ self settings fadedBackgroundWindows
+]
+
+{ #category : 'services' }
+UITheme >> fileDialogWindowClass [
+
+	^ self class environment 
+		at: #StOpenFilePresenter
+		ifAbsent: [  self error: 'File dialog support is missing in the image' ]
+]
+
+{ #category : 'services' }
+UITheme >> fileSaveDialogWindowClass [
+
+	^ self class environment 
+		at: #StSaveFilePresenter
+		ifAbsent: [  self error: 'File dialog support is missing in the image' ]
 ]
 
 { #category : 'accessing' }

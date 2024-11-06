@@ -93,14 +93,7 @@ PharoCommonTools class >> settingsOn: aBuilder [
 						target: Smalltalk;
 						targetSelector: #tools;
 						label: 'Versionbrowser';
-						domainValues: Smalltalk tools recentVersionBrowserTools ];
-		with: [
-					(aBuilder pickOne: #fileListTool)
-						target: Smalltalk;
-						targetSelector: #tools;
-						label: 'Filelist';
-						default: (self environment at: #FileList);
-						domainValues: Smalltalk tools recentFileListTools]
+						domainValues: Smalltalk tools recentVersionBrowserTools ]
 ]
 
 { #category : 'system startup' }
