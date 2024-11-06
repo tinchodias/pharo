@@ -49,7 +49,7 @@ SystemDependenciesTest >> knownBasicToolsDependencies [
 	     #'Refactoring-Critics' #'Commander-Core' #Reflectivity
 	     #'Reflectivity-Tools' #Shout 'HeuristicCompletion-Model'
 	     #VariablesLibrary #'Spec2-CommonWidgets' #'NewTools-Scopes'
-		  #'Traits-Tests' 'NewTools-Scopes')
+		  #'Traits-Tests' 'NewTools-Scopes' #'Commander-Activators-Shortcut')
 ]
 
 { #category : 'known dependencies' }
@@ -112,6 +112,7 @@ SystemDependenciesTest >> knownSpec2Dependencies [
 
 	^ #(
 		'WebBrowser-Core' "Spec's Link adapter"
+		'NewTools-SpTextPresenterDecorators'
 		)
 ]
 
@@ -128,7 +129,7 @@ SystemDependenciesTest >> knownUIDependencies [
 	"ideally this list should be empty"
 
 	^ #('AST-Core-Tests'  'Athens-Cairo' 'Athens-Core'
-	#'Athens-Morphic' #'Refactoring-Critics' #'Refactoring-Environment' 'Reflectivity-Tools' #Shout #'Tool-Diff' #'Tool-FileList' #'HeuristicCompletion-Model' 'NECompletion-Morphic' #VariablesLibrary #'Tools-CodeNavigation' #'Spec2-CommonWidgets' 'NewTools-Scopes')
+	#'Athens-Morphic' #'Refactoring-Critics' #'Refactoring-Environment' 'Reflectivity-Tools' #Shout #'Tool-Diff' #'Tool-FileList' #'HeuristicCompletion-Model' 'NECompletion-Morphic' #VariablesLibrary #'Tools-CodeNavigation' #'Spec2-CommonWidgets' 'NewTools-Scopes' #'Commander-Activators-Shortcut')
 ]
 
 { #category : 'accessing' }
