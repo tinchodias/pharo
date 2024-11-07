@@ -499,7 +499,7 @@ EpMonitor >> sessionStore [
 EpMonitor >> settingUpdated: updatedSetting [
 	"Register the updated setting in the receiver's log"
 
-	self addEvent: (EpCangedSettingEvent setting: updatedSetting)
+	self addEvent: (EpChangedSettingEvent setting: updatedSetting)
 ]
 
 { #category : 'private' }

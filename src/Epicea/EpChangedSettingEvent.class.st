@@ -1,5 +1,5 @@
 Class {
-	#name : 'EpCangedSettingEvent',
+	#name : 'EpChangedSettingEvent',
 	#superclass : 'EpEvent',
 	#instVars : [
 		'setting'
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : 'accessing' }
-EpCangedSettingEvent class >> setting: aSettingUpdated [
+EpChangedSettingEvent class >> setting: aSettingUpdated [
 
 	^ self new
 		setting: aSettingUpdated;
@@ -18,19 +18,19 @@ EpCangedSettingEvent class >> setting: aSettingUpdated [
 ]
 
 { #category : 'accessing' }
-EpCangedSettingEvent >> setting [
+EpChangedSettingEvent >> setting [
 
 	^ setting
 ]
 
 { #category : 'accessing' }
-EpCangedSettingEvent >> setting: anObject [
+EpChangedSettingEvent >> setting: anObject [
 
 	setting := anObject
 ]
 
 { #category : 'accessing' }
-EpCangedSettingEvent >> stonOn: stonWriter [
+EpChangedSettingEvent >> stonOn: stonWriter [
 	"Private - We don't serialize this event since some values are Blocks which are not yet serializable by STON: 
 	STONWriterError: custom #stonOn: implementation needed for variable/indexable class."
 
