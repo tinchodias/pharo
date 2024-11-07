@@ -59,34 +59,36 @@ ReExtractToTemporaryDriver >> requestVariableName [
 	| dialog variableName|
 	variableName := 'enter a variable name'.
 	dialog := self requestDialogWith: variableName.
-	dialog ifNil: [ shouldEscape := true. ^ self ].
-	^ dialog variableName
+	dialog ifNil: [ shouldEscape := true. ^ self].
+	^ dialog
 ]
 
 { #category : 'execution' }
 ReExtractToTemporaryDriver >> runRefactoring [
 
-	| checkVariableName checkVariableDefinition messageStream |
-
-   self configureRefactoring.
+	| checkVariableName checkVariableDefinition messageStream dialog |
+	
+	self configureRefactoring.
    refactoring prepareForExecution.
     
    [ 
-		newVariableName := self requestVariableName.
-      shouldEscape ifTrue: [ ^ self ].
+		dialog := self requestVariableName.
+		newVariableName := dialog variableName.
+		shouldEscape ifTrue: [ ^ self ].
 		refactoring extractToVariable: newVariableName.
 		
+		checkVariableName := refactoring preconditionValidInstVarName.
+		checkVariableDefinition := refactoring preconditionCheckVariableName.
       messageStream := WriteStream on: String new.
 
      	checkVariableName := refactoring preconditionValidInstVarName.
       checkVariableName check ifFalse: [
      		checkVariableName violationMessageOn: messageStream.
-         self variableNameEditorPresenterClass new showError: messageStream contents. false ]
+          dialog showError: messageStream contents. false ]
 		 ifTrue: [
-      		checkVariableDefinition := refactoring preconditionCheckVariableName.
          checkVariableDefinition check ifFalse: [
         		checkVariableDefinition violationMessageOn: messageStream.
-            	self variableNameEditorPresenterClass new showError: messageStream contents. false ]
+            dialog showError: messageStream contents. false ]
 			 ifTrue: [ true ]].
 	] whileFalse.
     

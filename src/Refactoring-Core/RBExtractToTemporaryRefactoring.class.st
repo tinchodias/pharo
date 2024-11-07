@@ -127,7 +127,6 @@ RBExtractToTemporaryRefactoring >> preconditionCheckVariableName [
 
 { #category : 'preconditions' }
 RBExtractToTemporaryRefactoring >> preconditionValidInstVarName [
-	"Here we ensure that new temporary name is not overlapping with existing instance variable."
 
 	^ ReIsValidInstanceVariableName new name: newVariableName
 ]
