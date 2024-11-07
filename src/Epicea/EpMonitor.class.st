@@ -496,6 +496,13 @@ EpMonitor >> sessionStore [
 ]
 
 { #category : 'private' }
+EpMonitor >> settingUpdated: updatedSetting [
+	"Register the updated setting in the receiver's log"
+
+	self addEvent: (EpCangedSettingEvent setting: updatedSetting)
+]
+
+{ #category : 'private' }
 EpMonitor >> subscribeToJobAnnouncer [
 
 	{	JobStart -> #jobStarted:.
@@ -528,7 +535,9 @@ EpMonitor >> subscribeToSystemAnnouncer [
 		(ClassRepackaged -> [ :ann | self classRepackaged: ann ]).
 		(ClassRenamed -> [ :ann | self classRenamed: ann ]).
 		(ClassCommented -> [ :ann | self classCommented: ann ]).
-		(MethodRecategorized -> [ :ann | self methodRecategorized: ann ]) } asDictionary keysAndValuesDo: [ :announcement :block |
+		(MethodRecategorized -> [ :ann | self methodRecategorized: ann ]) .
+		(SettingUpdated -> [ : ann | self settingUpdated: ann ])
+		 } asDictionary keysAndValuesDo: [ :announcement :block |
 		self systemAnnouncer weak
 			when: announcement
 			do: [ :ann | "During the tests, we should only log with Epicea if the test case declare it wants logging."
