@@ -496,13 +496,6 @@ EpMonitor >> sessionStore [
 ]
 
 { #category : 'private' }
-EpMonitor >> settingUpdated: updatedSetting [
-	"Register the updated setting in the receiver's log"
-
-	self addEvent: (EpChangedSettingEvent setting: updatedSetting)
-]
-
-{ #category : 'private' }
 EpMonitor >> subscribeToJobAnnouncer [
 
 	{	JobStart -> #jobStarted:.
@@ -536,7 +529,6 @@ EpMonitor >> subscribeToSystemAnnouncer [
 		(ClassRenamed -> [ :ann | self classRenamed: ann ]).
 		(ClassCommented -> [ :ann | self classCommented: ann ]).
 		(MethodRecategorized -> [ :ann | self methodRecategorized: ann ]) .
-		(SettingUpdated -> [ : ann | self settingUpdated: ann ])
 		 } asDictionary keysAndValuesDo: [ :announcement :block |
 		self systemAnnouncer weak
 			when: announcement
