@@ -41,12 +41,13 @@ Class {
 
 { #category : 'accessing' }
 ClySystemEnvironment class >> currentImage [
-	^currentImage ifNil: [
-		currentImage := self new
-			name: 'Current image';
-			globals: Smalltalk globals;
-			packageOrganizer: PackageOrganizer default;
-			changesAnnouncer: SystemAnnouncer uniqueInstance]
+
+	^ currentImage ifNil: [
+		  currentImage := self new
+			                  name: 'Current image';
+			                  globals: Smalltalk globals;
+			                  packageOrganizer: PackageOrganizer default;
+			                  changesAnnouncer: self codeChangeAnnouncer ]
 ]
 
 { #category : 'class initialization' }
