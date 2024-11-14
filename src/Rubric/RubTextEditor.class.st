@@ -2431,8 +2431,7 @@ RubTextEditor >> shouldEscapeCharacter: aCharacter [
 
 { #category : 'typing/selecting keys' }
 RubTextEditor >> space: aKeyboardEvent [
-	"Append a space to the stream of characters and commit the undo/redo transaction.
-	This allows to manage undo/redo at a per-word granularity"
+	"Close the undo/redo transaction. This undo/redo at a per-word granularity"
 
 	self closeTypeIn.
 	^false
