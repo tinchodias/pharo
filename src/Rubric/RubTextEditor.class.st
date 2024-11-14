@@ -2434,12 +2434,7 @@ RubTextEditor >> space: aKeyboardEvent [
 	"Append a space to the stream of characters and commit the undo/redo transaction.
 	This allows to manage undo/redo at a per-word granularity"
 
-	"We are consuming the space keydown event, do not send a keypress for it"
-	aKeyboardEvent supressNextKeyPress:  true.
-
 	self closeTypeIn.
-	self addString: String space.
-	self unselect.
 	^false
 ]
 
