@@ -261,7 +261,7 @@ BaselineOfIDE >> pharoPluginClass [
 BaselineOfIDE >> postload: loader package: packageSpec [
 	"Ignore pre and post loads if already executed"
 
-	Initialized ifTrue: [ ^ self ].
+	Initialized = true ifTrue: [ ^ self ].
 
 	"collect and process the standard tools registrations"
 	self tools initDefaultToolSet.
