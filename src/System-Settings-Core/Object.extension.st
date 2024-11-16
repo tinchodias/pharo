@@ -17,3 +17,9 @@ Object >> exportSettingAction [
 
 	^ self class exportSettingAction
 ]
+
+{ #category : '*System-Settings-Core' }
+Object class >> settingDeclarationDefault [
+
+	^ nil
+]
