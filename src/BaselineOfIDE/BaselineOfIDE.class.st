@@ -261,19 +261,21 @@ BaselineOfIDE >> pharoPluginClass [
 BaselineOfIDE >> postload: loader package: packageSpec [
 	"Ignore pre and post loads if already executed"
 
-	Initialized = true ifTrue: [ ^ self ].
+	Initialized ifTrue: [ ^ self ].
 
 	"collect and process the standard tools registrations"
-	Smalltalk tools initDefaultToolSet.
+	self tools initDefaultToolSet.
 
 	EpMonitor current enable.
 
-	Smalltalk tools register: ExternalChangesBrowser as: #changeList.
-	Smalltalk tools register: Finder as: #finder.
-	Smalltalk tools register: ProcessBrowser as: #processBrowser.
+	self tools
+		register: ExternalChangesBrowser as: #changeList;
+		register: StFileSystemPresenter as: #fileList;
+		register: Finder as: #finder;
+		register: ProcessBrowser as: #processBrowser.
 
 	(MorphicCoreUIManager readClassVariableNamed: #UIProcess) ifNotNil: [ :proc | proc terminate ].
-	MorphicCoreUIManager writeClassVariableNamed: #UIProcess   value: nil.
+	MorphicCoreUIManager writeClassVariableNamed: #UIProcess value: nil.
 
 	PolymorphSystemSettings desktopColor: Color veryVeryLightGray lighter.
 	SourceCodeFonts setSourceCodeFonts: 10.
@@ -312,7 +314,7 @@ BaselineOfIDE >> postload: loader package: packageSpec [
 	self loadExtraTools.
 	self makeCalypsoDefaultBrowser.
 
-	Initialized := true
+	Initialized := true.
 ]
 
 { #category : 'actions' }
