@@ -4461,7 +4461,7 @@ Morph >> okayToRotateEasily [
 Morph >> on: aShortcut do: anAction [
 
 	self
-		deprecated: 'Use bindKeyCombination:toActions:'
+		deprecated: 'Use bindKeyCombination:toAction:'
 		on: '16/11/2024'
 		in: #Pharo13
 		transformWith: '`@receiver on: `@aShortcut do: `@anAction'
