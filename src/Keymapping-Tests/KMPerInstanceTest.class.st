@@ -14,7 +14,7 @@ KMPerInstanceTest >> testAddMoreThanOneHandler [
 	| flag morph |
 	flag := 0.
 	morph := Morph new.
-	morph bindKeyCombination: $i toActions: [ flag := flag + 1 ].
+	morph bindKeyCombination: $i toAction: [ flag := flag + 1 ].
 	morph
 		on: $j
 		do: [ flag := flag + 6 ].
