@@ -53,16 +53,16 @@ Class {
 	#tag : 'Contexts'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing - packages' }
 ClySystemBrowserContext class >> rememberedPackage [
 
 	^ RememberedPackage ifNil: [ RememberedPackage := nil ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing - packages' }
 ClySystemBrowserContext class >> rememberedPackage: aPackage [
 
-RememberedPackage := aPackage 
+	RememberedPackage := aPackage
 ]
 
 { #category : 'user requests' }
@@ -204,10 +204,10 @@ ClySystemBrowserContext >> requestSinglePackage: queryTitle [
 		  presenter items:
 			  (self browser itemsForQuery: ClyAllPackagesQuery sorted).
 		  self class rememberedPackage ifNotNil: [
-			  presenter searchWithItem: self class rememberedPackage ] .
-		dialog okAction:[ self class rememberedPackage: presenter selectedItem.
-        "Mémorise la sélection ici" ]].
-
+			  presenter searchWithItem: self class rememberedPackage ].
+		  dialog okAction: [
+			  self class rememberedPackage: presenter selectedItem
+			  "Mémorise la sélection ici" ] ]
 ]
 
 { #category : 'selection-classes' }
