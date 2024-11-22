@@ -65,7 +65,6 @@ ReRenameMethodRefactoring >> applicabilityPreconditions [
 
 	^ {
 		  self validSelectorCondition.
-		  self methodDefinedInClassCondition.
 		  self newNameDoesNotRequireRefactoringPrecondition not.
 		  self selectorsHaveSameArity }
 ]
