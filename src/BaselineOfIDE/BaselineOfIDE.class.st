@@ -314,7 +314,7 @@ BaselineOfIDE >> postload: loader package: packageSpec [
 	self loadExtraTools.
 	self makeCalypsoDefaultBrowser.
 
-	Initialized := true
+	Initialized := true.
 ]
 
 { #category : 'actions' }
