@@ -45,7 +45,7 @@ And I implement simplified search requests:
 Class {
 	#name : 'ClySystemBrowserContext',
 	#superclass : 'ClyBrowserContext',
-	#classInstVars : [
+	#classVars : [
 		'RememberedPackage'
 	],
 	#category : 'Calypso-SystemTools-Core-Contexts',
