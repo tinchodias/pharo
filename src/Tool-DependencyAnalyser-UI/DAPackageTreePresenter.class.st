@@ -93,7 +93,7 @@ DAPackageTreePresenter >> initializePresenters [
 		help: 'Refresh the list of analyzed packages';
 		yourself.
 
-	browser := Smalltalk tools browser onDefaultEnvironment
+	browser := self application tools browser onDefaultEnvironment
 ]
 
 { #category : 'actions' }
