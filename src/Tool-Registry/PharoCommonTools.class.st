@@ -99,7 +99,7 @@ PharoCommonTools class >> settingsOn: aBuilder [
 						target: Smalltalk;
 						targetSelector: #tools;
 						label: 'Filelist';
-						default: (self environment at: #FileList);
+						default: (self environment at: #StFileSystemPresenter);
 						domainValues: self tools recentFileListTools]
 ]
 
