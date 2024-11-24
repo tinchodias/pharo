@@ -77,7 +77,10 @@ TestAsserter class >> isLogging [
 
 { #category : 'logging' }
 TestAsserter class >> logFailure: aString [
-
+	"It provides a way to log something at the class level.
+	Note that they are two levels of logging one at the class and other at instance. So isLogging should be defined in subclasses at the right place.
+	Clearly this duplication is strange."
+	
 	self isLogging ifTrue:
 		[ self failureLog 
 				cr; 

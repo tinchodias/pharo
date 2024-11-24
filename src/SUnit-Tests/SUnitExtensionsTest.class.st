@@ -49,11 +49,6 @@ SUnitExtensionsTest >> errorInRaiseWithExceptionDoTest [
 		withExceptionDo: [ :anException | Error signal: 'A forced error' ]
 ]
 
-{ #category : 'test support' }
-SUnitExtensionsTest >> failureLog [
-	^self stream
-]
-
 { #category : 'real tests' }
 SUnitExtensionsTest >> invalidShouldNotTakeMoreThan [
 
@@ -102,11 +97,6 @@ SUnitExtensionsTest >> shouldRaiseWithSignalDoTest [
 		raise: Error withExceptionDo: [ :anException | self assert: anException messageText equals: '1' ]
 ]
 
-{ #category : 'accessing' }
-SUnitExtensionsTest >> stream [
-	^stream ifNil: [stream := String new writeStream]
-]
-
 { #category : 'tests' }
 SUnitExtensionsTest >> testAssertionFailedInRaiseWithExceptionDo [
 	| testCase testResult |
@@ -121,11 +111,15 @@ SUnitExtensionsTest >> testAssertionFailedInRaiseWithExceptionDo [
 
 { #category : 'tests' }
 SUnitExtensionsTest >> testAutoAssertFalse [
-	| booleanCondition |
+	
 	self assert: self isLogging.
-	self should: [ self assert: 1 = 2 description: 'self assert: 1 = 2' ] raise: self defaultTestFailure.
-	booleanCondition := (self stream contents substrings: {Character cr}) last = 'self assert: 1 = 2'.
-	self assert: booleanCondition
+	self 
+		should: [ self assert: 1 = 2 description: 'self assert: 1 = 2' ] 
+		raise: self defaultTestFailure.
+	self 
+		assert: (self failureLog contents substrings: {Character cr}) last 
+		equals: 'self assert: 1 = 2'.
+
 ]
 
 { #category : 'tests' }
@@ -136,11 +130,15 @@ SUnitExtensionsTest >> testAutoAssertTrue [
 
 { #category : 'tests' }
 SUnitExtensionsTest >> testAutoDenyFalse [
-	| booleanCondition |
+
 	self assert: self isLogging.
-	self should: [ self deny: 1 = 1 description: 'self deny: 1 = 1'.] raise: self defaultTestFailure.
-	booleanCondition := (self stream contents substrings:  {Character cr}) last = 'self deny: 1 = 1'.
-	self assert: booleanCondition
+	self 
+		should: [ self deny: 1 = 1 description: 'self deny: 1 = 1' ] 
+		raise: self defaultTestFailure.
+	self 
+		assert: (self failureLog contents substrings:  {Character cr}) last 
+		equals: 'self deny: 1 = 1'.
+	
 ]
 
 { #category : 'tests' }

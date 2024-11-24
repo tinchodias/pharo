@@ -730,10 +730,15 @@ TestCase >> isLogging [
 	^false
 ]
 
-{ #category : 'running' }
+{ #category : 'logging' }
 TestCase >> logFailure: aString [
 
-	self class logFailure: aString
+	self isLogging 
+		ifTrue: [
+			self class failureLog
+				cr;
+				nextPutAll: aString;
+				flush]
 ]
 
 { #category : 'accessing' }
