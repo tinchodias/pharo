@@ -23,7 +23,7 @@ If the transformation is defined, the Warning will not signalled.
 
 "
 Class {
-	#name : 'Deprecation',
+	#name : 'BackwardCompatibility',
 	#superclass : 'AutomaticRewriting',
 	#instVars : [
 		'context',
@@ -45,19 +45,19 @@ Class {
 }
 
 { #category : 'logging' }
-Deprecation class >> activateTransformations [
+BackwardCompatibility class >> activateTransformations [
 
 	^ Active ifNil: [ Active := true ]
 ]
 
 { #category : 'logging' }
-Deprecation class >> activateTransformations: aBoolean [
+BackwardCompatibility class >> activateTransformations: aBoolean [
 
 	Active := aBoolean
 ]
 
 { #category : 'logging' }
-Deprecation class >> deprecationsWhile: aBlock [
+BackwardCompatibility class >> deprecationsWhile: aBlock [
 	"returns a log of all deprecated methods seen while executing aBlock"
 	| oldLog result |
 	oldLog := Log.
@@ -70,23 +70,23 @@ Deprecation class >> deprecationsWhile: aBlock [
 ]
 
 { #category : 'class initialization' }
-Deprecation class >> initialize [
+BackwardCompatibility class >> initialize [
 	self reset
 ]
 
 { #category : 'settings' }
-Deprecation class >> raiseWarning [
+BackwardCompatibility class >> raiseWarning [
 	"If true, then a dialog is popup for each deprecated method invocation"
 	^ RaiseWarning ifNil: [RaiseWarning := false]
 ]
 
 { #category : 'settings' }
-Deprecation class >> raiseWarning: aBoolean [
+BackwardCompatibility class >> raiseWarning: aBoolean [
 	RaiseWarning := aBoolean
 ]
 
 { #category : 'class initialization' }
-Deprecation class >> reset [
+BackwardCompatibility class >> reset [
 	<script>
 	Log := nil.
 	RaiseWarning := nil.
@@ -95,18 +95,18 @@ Deprecation class >> reset [
 ]
 
 { #category : 'settings' }
-Deprecation class >> showWarning [
+BackwardCompatibility class >> showWarning [
 	"If true, then a message is send to the Transcript for each deprecated method invocation"
 	^ ShowWarning ifNil: [ShowWarning := true]
 ]
 
 { #category : 'settings' }
-Deprecation class >> showWarning: aBoolean [
+BackwardCompatibility class >> showWarning: aBoolean [
 	ShowWarning := aBoolean
 ]
 
 { #category : 'comparing' }
-Deprecation >> = anObject [
+BackwardCompatibility >> = anObject [
 	^self class == anObject class
 	  and: [context = anObject contextOfDeprecatedMethod
 	  and: [context
@@ -115,32 +115,32 @@ Deprecation >> = anObject [
 ]
 
 { #category : 'accessing' }
-Deprecation >> condition: aBlock [
+BackwardCompatibility >> condition: aBlock [
 	condition := aBlock
 ]
 
 { #category : 'accessing' }
-Deprecation >> context: aContext [
+BackwardCompatibility >> context: aContext [
 	context := aContext
 ]
 
 { #category : 'accessing' }
-Deprecation >> contextOfDeprecatedMethod [
+BackwardCompatibility >> contextOfDeprecatedMethod [
 	^context
 ]
 
 { #category : 'accessing' }
-Deprecation >> contextOfSender [
+BackwardCompatibility >> contextOfSender [
 	^context home sender
 ]
 
 { #category : 'accessing' }
-Deprecation >> date: aDate [
+BackwardCompatibility >> date: aDate [
 	deprecationDate := aDate
 ]
 
 { #category : 'handling' }
-Deprecation >> defaultAction [
+BackwardCompatibility >> defaultAction [
 
 	Log ifNotNil: [ :log | log add: self ].
 	self showWarning ifTrue: [ self logTranscript ].
@@ -149,39 +149,39 @@ Deprecation >> defaultAction [
 ]
 
 { #category : 'private' }
-Deprecation >> deprecatedMethodName [
+BackwardCompatibility >> deprecatedMethodName [
 	^self contextOfDeprecatedMethod homeMethod printString
 ]
 
 { #category : 'accessing' }
-Deprecation >> deprecationDate [
+BackwardCompatibility >> deprecationDate [
 
 	^ deprecationDate ifNil: [ 'unknown' ]
 ]
 
 { #category : 'accessing' }
-Deprecation >> explanation: aString [
+BackwardCompatibility >> explanation: aString [
 	explanationString := aString
 ]
 
 { #category : 'accessing' }
-Deprecation >> explanationString [
+BackwardCompatibility >> explanationString [
 
 	^ explanationString
 ]
 
 { #category : 'comparing' }
-Deprecation >> hash [
+BackwardCompatibility >> hash [
 	^(context ifNil: [explanationString]) hash
 ]
 
 { #category : 'private' }
-Deprecation >> logTranscript [
+BackwardCompatibility >> logTranscript [
 	DeprecationPerformedNotification signal: self messageText
 ]
 
 { #category : 'accessing' }
-Deprecation >> messageText [
+BackwardCompatibility >> messageText [
 	^String streamContents: [ :str |
 		self shouldTransform ifTrue: [
 			str nextPutAll:  'Automatic deprecation code rewrite: '].
@@ -195,39 +195,39 @@ Deprecation >> messageText [
 ]
 
 { #category : 'settings' }
-Deprecation >> raiseWarning [
+BackwardCompatibility >> raiseWarning [
 	^ self class raiseWarning
 ]
 
 { #category : 'private' }
-Deprecation >> rewriterClass [
+BackwardCompatibility >> rewriterClass [
 	^ self class environment at: #ASTParseTreeRewriter ifAbsent: [ nil ]
 ]
 
 { #category : 'accessing' }
-Deprecation >> rule: aRule [
+BackwardCompatibility >> rule: aRule [
 	rule := aRule
 ]
 
 { #category : 'private' }
-Deprecation >> sendingMethodName [
+BackwardCompatibility >> sendingMethodName [
 	^self contextOfSender homeMethod printString
 ]
 
 { #category : 'handling' }
-Deprecation >> shouldTransform [
+BackwardCompatibility >> shouldTransform [
 	self class activateTransformations ifFalse: [ ^false  ].
 	(condition isNil or: [ condition cull: self ]) ifFalse: [ ^false ].
 	^rule isNotNil
 ]
 
 { #category : 'settings' }
-Deprecation >> showWarning [
+BackwardCompatibility >> showWarning [
 	^ self class showWarning
 ]
 
 { #category : 'handling' }
-Deprecation >> signal [
+BackwardCompatibility >> signal [
 	| pragma homeMethod |
 	homeMethod := context homeMethod.
 	(homeMethod hasPragmaNamed: #transform:to:) ifFalse: [ ^super signal ].
@@ -238,7 +238,7 @@ Deprecation >> signal [
 ]
 
 { #category : 'handling' }
-Deprecation >> transform [
+BackwardCompatibility >> transform [
 
 	| node rewriteRule aMethod |
 
@@ -264,12 +264,12 @@ Deprecation >> transform [
 ]
 
 { #category : 'accessing' }
-Deprecation >> version: aString [
+BackwardCompatibility >> version: aString [
 	versionString := aString
 ]
 
 { #category : 'accessing' }
-Deprecation >> versionString [
+BackwardCompatibility >> versionString [
 
 	^ versionString ifNil: [ 'unknown' ]
 ]
