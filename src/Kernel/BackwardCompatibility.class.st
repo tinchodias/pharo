@@ -31,12 +31,6 @@ When the transformation is defined, the Warning will not signalled.
 Class {
 	#name : 'BackwardCompatibility',
 	#superclass : 'AutomaticRewriting',
-	#classVars : [
-		'Active',
-		'Log',
-		'RaiseWarning',
-		'ShowWarning'
-	],
 	#category : 'Kernel-Exceptions',
 	#package : 'Kernel',
 	#tag : 'Exceptions'
