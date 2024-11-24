@@ -707,7 +707,7 @@ TestCase >> expectedFailures [
 { #category : 'running' }
 TestCase >> failureLog [
 
-	^ Smalltalk tools transcript
+	^ self class failureLog
 ]
 
 { #category : 'private' }
@@ -732,11 +732,8 @@ TestCase >> isLogging [
 
 { #category : 'running' }
 TestCase >> logFailure: aString [
-	self isLogging ifTrue: [
-		self failureLog
-			cr;
-			nextPutAll: aString;
-			flush]
+
+	self class logFailure: aString
 ]
 
 { #category : 'accessing' }

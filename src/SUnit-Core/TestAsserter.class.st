@@ -28,6 +28,9 @@ To have them appear elsewhere, also override my class-side `TestAsserter class>>
 Class {
 	#name : 'TestAsserter',
 	#superclass : 'Object',
+	#classVars : [
+		'LogFailureStream'
+	],
 	#category : 'SUnit-Core-Kernel',
 	#package : 'SUnit-Core',
 	#tag : 'Kernel'
@@ -55,7 +58,14 @@ TestAsserter class >> classForTestSuite [
 
 { #category : 'logging' }
 TestAsserter class >> failureLog [
-	^ Smalltalk tools transcript
+	^ LogFailureStream ifNil: [ self failureLog: String new writeStream. LogFailureStream ]
+]
+
+{ #category : 'logging' }
+TestAsserter class >> failureLog: aStream [ 
+	"So that we can pass a different stream if needed."
+	
+	LogFailureStream := aStream
 ]
 
 { #category : 'logging' }
@@ -67,8 +77,12 @@ TestAsserter class >> isLogging [
 
 { #category : 'logging' }
 TestAsserter class >> logFailure: aString [
+
 	self isLogging ifTrue:
-		[self failureLog cr; nextPutAll: aString; flush]
+		[ self failureLog 
+				cr; 
+				nextPutAll: aString; 
+				flush ]
 ]
 
 { #category : 'factory' }
