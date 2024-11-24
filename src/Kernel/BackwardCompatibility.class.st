@@ -17,14 +17,16 @@ foo
 		backwardCompatible:  'The method #foo was not good. Use Bar>>newFoo instead.'
 		on:  'here add date'
 		in:  'here add version'
-		 transformWith:   '`@receiver foo' -> '`@receiver newFoo'.	
+		transformWith: '`@receiver foo' -> '`@receiver newFoo'.	
 	^ self newFoo
 ```
 
 You are done the system will rewrite the callers to this foo method (and not other potential implementations) when it is executed. 
 	
 The `transformWith:`  allows one to transform the backard compatible method calls automatically when called.
-When the transformation is defined, the Warning will not signalled.
+The Warning will not signalled.
+
+Check class side for posible configurations. You can ignore, raise warning, log or rewrite.
 
 
 "
