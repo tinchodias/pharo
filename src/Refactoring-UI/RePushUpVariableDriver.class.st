@@ -5,10 +5,7 @@ Class {
 	#name : 'RePushUpVariableDriver',
 	#superclass : 'ReInteractionDriver',
 	#instVars : [
-		'oldName',
 		'class',
-		'shouldEscape',
-		'previouslyProposedName',
 		'variable'
 	],
 	#category : 'Refactoring-UI-Drivers',
@@ -35,7 +32,7 @@ RePushUpVariableDriver >> configureRefactoring [
 
 { #category : 'factory method' }
 RePushUpVariableDriver >> refactoringClass [
-	^ RBPullUpInstanceVariableRefactoring
+	^ RePullUpInstanceVariableRefactoring
 ]
 
 { #category : 'execution' }
