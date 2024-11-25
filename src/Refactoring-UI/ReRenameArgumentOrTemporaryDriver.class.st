@@ -59,6 +59,7 @@ ReRenameArgumentOrTemporaryDriver >> runRefactoring [
 
 	| cancelled |
 	self configureRefactoring.
+	refactoring prepareForExecution. "This is needed to set some info in the refactoring such as the parse tree or the defining node."
 	(refactoring applicabilityPreconditionsIndependentOfTheNewName reject: [ :condition | condition check ]) ifNotEmpty: [
 		^ self inform: 'The interval selected is not right to rename a temporary variable.' ].
 
