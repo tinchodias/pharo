@@ -66,10 +66,11 @@ ReRenameArgumentOrTemporaryDriver >> runRefactoring [
 	cancelled := false.
 
 	[
-	refactoring newName: (self defaultRequestDialog
+	refactoring newName: (self defaultRequestDialog 
 			 title: 'Rename a temp variable';
 			 label: 'New name of the variable';
-			 text: sourceNode name;
+			 text: sourceNode name  ;
+			 
 			 onCancel: [ "We cannot return in this block so we save the result as a boolean to check it later." cancelled := true ];
 			 openModal).
 
