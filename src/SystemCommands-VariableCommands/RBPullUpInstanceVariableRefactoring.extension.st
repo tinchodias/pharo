@@ -1,6 +1,6 @@
 Extension { #name : 'RBPullUpInstanceVariableRefactoring' }
 
 { #category : '*SystemCommands-VariableCommands' }
-RBPullUpInstanceVariableRefactoring class >> classVariableAnalog [
+RBPullUpInstanceVariableRefactoring classSide >> classVariableAnalog [
 	^RBPullUpClassVariableRefactoring
 ]
