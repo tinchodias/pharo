@@ -196,6 +196,12 @@ Symbol class >> rehash [
 	self resetSelectorTable
 ]
 
+{ #category : 'as yet unclassified' }
+Symbol class >> reservedLiterals [
+
+	^ PseudoVariable lookupDictionary keys
+]
+
 { #category : 'cleanup' }
 Symbol class >> resetSelectorTable [
 	^ SelectorTable := nil

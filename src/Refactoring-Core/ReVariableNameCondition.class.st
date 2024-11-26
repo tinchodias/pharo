@@ -21,7 +21,8 @@ ReVariableNameCondition class >> name: aString [
 
 { #category : 'utilities' }
 ReVariableNameCondition class >> reservedNames [
-	^#('self' 'true' 'false' 'nil' 'thisContext' 'super')
+
+	^ PseudoVariable lookupDictionary keys
 ]
 
 { #category : 'accessing' }
