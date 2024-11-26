@@ -271,7 +271,7 @@ BaselineOfIDE >> postload: loader package: packageSpec [
 	self tools
 		register: ExternalChangesBrowser as: #changeList;
 		register: StFileSystemPresenter as: #fileList;
-		register: Finder as: #finder;
+		register: StFinderPresenter as: #finder;
 		register: ProcessBrowser as: #processBrowser.
 
 	(MorphicCoreUIManager readClassVariableNamed: #UIProcess) ifNotNil: [ :proc | proc terminate ].
@@ -314,7 +314,7 @@ BaselineOfIDE >> postload: loader package: packageSpec [
 	self loadExtraTools.
 	self makeCalypsoDefaultBrowser.
 
-	Initialized := true
+	Initialized := true.
 ]
 
 { #category : 'actions' }

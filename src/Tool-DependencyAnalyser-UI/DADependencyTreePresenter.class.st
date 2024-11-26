@@ -50,10 +50,14 @@ DADependencyTreePresenter class >> onPackagesMatch: match [
 
 { #category : 'instance creation' }
 DADependencyTreePresenter class >> onPackagesNamed: aCollection [
-
-	^ self new
-		  initializeWith: aCollection;
-		  yourself
+	self flag: #IncreaseTechnicalDebt.
+		"The flow is BAD AND WRONG! 
+	We should not explicit use StPharoApplication current this is a bad practice. Now I have no idea how to do it otherwise. So let us propagate bad practices.
+	You like debt: here it is"
+	
+	^ (self newApplication: StPharoApplication current) 
+		initializeWith: aCollection;
+		yourself
 ]
 
 { #category : 'specs' }

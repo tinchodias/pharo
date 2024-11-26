@@ -1,36 +1,37 @@
 "
-This Warning is signalled by methods which are deprecated.
+This Warning is signalled by methods which are kept for backward compatible concerns.
+Now you should not call them, and we nicely propose you that the system rewrite your messages to invoke the correct ones. 
 
-Idiom: Imagine I want to deprecate the message #foo.
+Idiom: Imagine that you want to declare that a method is just kept around for backward compatibility.
 
 ```
 foo
 	^ 'foo'
 ```
 
-I can replace it with:
+For this we introduce the following call in the definition of the `foo` method:
 
 ```
 foo
 	self 
-		deprecated:   'The method #foo was not good. Use Bar>>newFoo instead.'
+		backwardCompatible:  'The method #foo was not good. Use Bar>>newFoo instead.'
 		on:  'here add date'
 		in:  'here add version'
-		transformWith:   '`@receiver foo' -> '`@receiver newFoo'.	
-	^self newFoo
-	
+		transformWith: '`@receiver foo' -> '`@receiver newFoo'.	
+	^ self newFoo
 ```
+
+You are done the system will rewrite the callers to this foo method (and not other potential implementations) when it is executed. 
 	
-The  transformWith:  part is optional. It allows to transform the deprecated method automatically when called.
-If the transformation is defined, the Warning will not signalled.
+The `transformWith:`  allows one to transform the backard compatible method calls automatically when called.
+The Warning will not signalled.
 
-
-Check the class side for configurations. You can raise, ignore, log and rewrite callers. 
+Check class side for posible configurations. You can ignore, raise warning, log or rewrite.
 
 
 "
 Class {
-	#name : 'Deprecation',
+	#name : 'BackwardCompatibility',
 	#superclass : 'AutomaticRewriting',
 	#category : 'Kernel-Exceptions',
 	#package : 'Kernel',
@@ -38,20 +39,21 @@ Class {
 }
 
 { #category : 'logging' }
-Deprecation class >> deprecationsWhile: aBlock [
-	"returns a log of all deprecated methods seen while executing aBlock"
+BackwardCompatibility class >> backwardsCompatibilityWhile: aBlock [
+	"Returns a log of all backward compatible methods seen while executing aBlock"
+
 	| oldLog result |
 	oldLog := log.
 	log := Set new.
 	aBlock value.
 	result := log.
-	oldLog ifNotNil: [oldLog addAll: result].
+	oldLog ifNotNil: [ oldLog addAll: result ].
 	log := oldLog.
-	^result
+	^ result
 ]
 
 { #category : 'handling' }
-Deprecation >> defaultAction [
+BackwardCompatibility >> defaultAction [
 
 	self class addLog: self.
 	self showWarning ifTrue: [ self logTranscript ].
@@ -60,26 +62,28 @@ Deprecation >> defaultAction [
 ]
 
 { #category : 'private' }
-Deprecation >> logTranscript [
-	DeprecationPerformedNotification signal: self messageText
+BackwardCompatibility >> logTranscript [
+
+	BackwardCompatibleRewritingCallPerformedNotification signal: self messageText
 ]
 
 { #category : 'accessing' }
-Deprecation >> messageText [
-	^String streamContents: [ :str |
+BackwardCompatibility >> messageText [
+	
+	^ String streamContents: [ :str |
 		self shouldTransform ifTrue: [
-			str nextPutAll:  'Automatic deprecation caller rewrite: '].
+			str nextPutAll:  'Automatic backward compatible senders rewrite: '].
 		str
 			nextPutAll: 'The method ';
 			nextPutAll: self deprecatedMethodName;
 			nextPutAll: ' called from ';
 			nextPutAll: self sendingMethodName;
-			nextPutAll: ' has been deprecated. ';
+			nextPutAll: ' is kept for backward compatible concerns.';
 		 	nextPutAll: explanationString]
 ]
 
 { #category : 'handling' }
-Deprecation >> transform [
+BackwardCompatibility >> transform [
 
 	| node rewriteRule aMethod |
 
