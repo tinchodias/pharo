@@ -199,7 +199,7 @@ Symbol class >> rehash [
 { #category : 'accessing' }
 Symbol class >> reservedLiterals [
 
-	^ PseudoVariable lookupDictionary keys
+	^ PseudoVariable lookupDictionary keys union: #( #nil #true #false )
 ]
 
 { #category : 'cleanup' }

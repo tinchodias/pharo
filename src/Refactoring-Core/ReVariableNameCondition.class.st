@@ -19,12 +19,6 @@ ReVariableNameCondition class >> name: aString [
 	^ self new name: aString
 ]
 
-{ #category : 'utilities' }
-ReVariableNameCondition class >> reservedNames [
-
-	^ PseudoVariable lookupDictionary keys
-]
-
 { #category : 'accessing' }
 ReVariableNameCondition >> errorString [
 
