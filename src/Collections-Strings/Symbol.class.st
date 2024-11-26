@@ -196,7 +196,7 @@ Symbol class >> rehash [
 	self resetSelectorTable
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 Symbol class >> reservedLiterals [
 
 	^ PseudoVariable lookupDictionary keys
