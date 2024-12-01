@@ -94,6 +94,24 @@ ReInteractionDriver >> defaultSelectDialog [
 	
 ]
 
+{ #category : 'ui - dialogs' }
+ReInteractionDriver >> failedPreconditionsErrorString [
+
+	^ String streamContents: [ :stream |
+		  refactoring failedApplicabilityPreconditions do: [ :cond |
+				  cond violationMessageOn: stream.
+				  stream cr ] ]
+]
+
+{ #category : 'ui - dialogs' }
+ReInteractionDriver >> failedPreconditionsErrorString: conditions [
+
+	^ String streamContents: [ :stream |
+		  conditions do: [ :cond |
+				  cond violationMessageOn: stream.
+				  stream cr ] ]
+]
+
 { #category : 'execution' }
 ReInteractionDriver >> furtherActionFor: aReport [
 	
