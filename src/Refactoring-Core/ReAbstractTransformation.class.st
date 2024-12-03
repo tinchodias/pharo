@@ -428,6 +428,8 @@ ReAbstractTransformation >> safeMethodNameFor: aClass basedOn: aString [
 	hasParam := newString last = $:.
 	hasParam ifTrue: [
 		baseString := newString copyFrom: 1 to: newString size - 1 ].
+	newString asSymbol isBinary ifTrue: [ 
+		^ baseString asSymbol ].
 	i := 0.
 	[ aClass hierarchyDefinesMethod: newString asSymbol ] whileTrue: [
 		i := i + 1.

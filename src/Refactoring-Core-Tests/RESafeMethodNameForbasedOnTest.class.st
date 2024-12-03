@@ -29,19 +29,19 @@ RESafeMethodNameForbasedOnTest >> testBinaryMessages [
 	myClassNumber := self model classNamed: #Number.
 	myClassInteger := self model classNamed: #Integer.
 	
-	"Test for existing method name in class, requiures an appended '1'."
+	"Test for existing method name in class, bianry messages requiure no appendeding to be safe."
 	tempSymbol := ReAbstractTransformation new safeMethodNameFor: myClassInteger basedOn: '+'.
-	self assert: tempSymbol equals: '+1' asSymbol.
+	self assert: tempSymbol equals: '+' asSymbol.
 	
-	"Test for existing method name in subclass, requiures an appended '1'."
+	"Test for existing method name in subclass, bianry messages requiure no appendeding to be safe."
 	tempSymbol := ReAbstractTransformation new safeMethodNameFor: myClassNumber basedOn: '\\\'.
-	self assert: tempSymbol equals: '\\\1' asSymbol.
+	self assert: tempSymbol equals: '\\\' asSymbol.
 	
-	"Test for existing method name in superclass, requiures an appended '1'."
+	"Test for existing method name in superclass, bianry messages requiure no appendeding to be safe"
 	tempSymbol := ReAbstractTransformation new safeMethodNameFor: myClassInteger basedOn: '**'.
-	self assert: tempSymbol equals: '**1' asSymbol.
+	self assert: tempSymbol equals: '**' asSymbol.
 	
-	"Test for non-existing method name, requiures no appendeding to be safe."
+	"Test for non-existing method name, bianry messages requiure no appendeding to be safee."
 	tempSymbol := ReAbstractTransformation new safeMethodNameFor: myClassInteger basedOn: '$%$'.
 	self assert: tempSymbol equals: '$%$' asSymbol.
 	
