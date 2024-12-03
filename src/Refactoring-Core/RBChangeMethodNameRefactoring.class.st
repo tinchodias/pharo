@@ -195,16 +195,11 @@ RBChangeMethodNameRefactoring >> renameMethod: aSelector in: aClass to: newSel p
 
 { #category : 'transforming' }
 RBChangeMethodNameRefactoring >> replaceMessageSends [
-	| className |
-	
-	className :=  class name, (class isMeta 
-		ifTrue: [ ' class' ]
-		ifFalse: [ '' ]).
 	
 	self generateChangesFor: (RBReplaceMessageSendTransformation
 			 model: self model
 			 replaceMethod: oldSelector
-			 in: (self model classNamed: className)
+			 in: class
 			 to: newSelector
 			 permutation: permutation
 			 inAllClasses: true
