@@ -47,7 +47,7 @@ RBClass class >> initialize [
 
 { #category : 'instance creation' }
 RBClass class >> named: aSymbol [
-	^(self new)
+	^ self new 
 		name: aSymbol;
 		yourself
 ]
@@ -240,7 +240,7 @@ RBClass >> privatePoolDictionaryNames [
 	^poolDictionaryNames
 ]
 
-{ #category : 'initialization' }
+{ #category : 'private' }
 RBClass >> realName: aSymbol [
 	self realClass: (self model environment at: aSymbol)
 ]
