@@ -38,7 +38,10 @@ SDL_Window >> createAcceleratedRenderer [
 
 { #category : 'rendering' }
 SDL_Window >> createDefaultRenderer [
-	^ self createRenderer: -1 flags: 0
+	"Flags was 0 previously but this caused crashes on Mac with 4k displays.
+	https://github.com/pharo-project/pharo/issues/17439"
+
+	^ self createRenderer: -1 flags: SDL_RENDERER_PRESENTVSYNC
 ]
 
 { #category : 'rendering' }
