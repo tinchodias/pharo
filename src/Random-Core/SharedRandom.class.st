@@ -51,6 +51,7 @@ SharedRandom class >> startUp [
 
 { #category : 'initialization' }
 SharedRandom >> initialize [
+
 	super initialize.
 	mutex := Semaphore forMutualExclusion
 ]

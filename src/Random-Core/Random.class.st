@@ -2,20 +2,20 @@
 This Random Number Generator is an implementation of a Permuted Congruential Generator (https://www.pcg-random.org/index.html)
 
 If you just want a quick random integer, use:
-		10 atRandom
+		`10 atRandom`
 Every integer interval can give a random number:
-		(6 to: 12) atRandom
+		`(6 to: 12) atRandom`
 SequenceableCollections can give randomly selected elements:
-		'pick one of these letters randomly' atRandom
+		`'pick one of these letters randomly' atRandom`
 SequenceableCollections also respond to shuffled, as in:
-		($A to: $Z) shuffled
+		`($A to: $Z) shuffled`
 
 The correct way to use class Random is to store one in an instance or class variable:
-		myGenerator := Random new.
+		`myGenerator := Random new.`
 Then use it every time you need another number between 0.0 and 1.0 (excluding)
-		myGenerator next
+		`myGenerator next`
 You can also generate a positive integer
-		myGenerator nextInteger: 10
+		`myGenerator nextInteger: 10`
 
 
 The implementation used here is the minimal implementation:
@@ -55,6 +55,10 @@ Class {
 	#instVars : [
 		'state',
 		'seed'
+	],
+	#classVars : [
+		'MaxValue',
+		'MaxValuePlusOneAsFloat'
 	],
 	#category : 'Random-Core-Base',
 	#package : 'Random-Core',
@@ -100,65 +104,69 @@ more; go get coffee.
 						stream space ] ])
 ]
 
-{ #category : 'private' }
-Random class >> primitiveRandomNumber: stateArray [
-	"Answer a random Float in the interval [0 to 1)."
+{ #category : 'class initialization' }
+Random class >> initialize [
 
-	| count returnValue |
-	returnValue := stateArray at: 1.
+	MaxValue := 16r7FFFFFFF.
+	MaxValuePlusOneAsFloat := (MaxValue + 1) asFloat
+]
 
-	count := returnValue >> 59.
+{ #category : 'instance creation' }
+Random class >> new [
 
-	stateArray
-		at: 1
-		put:
-			(returnValue * 6364136223846793005 + 1442695040888963407 bitAnd:
-				 16rFFFFFFFFFFFFFFFF).
-
-	returnValue := returnValue >> 18 bitXor: returnValue.
-
-	returnValue := returnValue >> 27 bitAnd: 16rFFFFFFFF.
-	^ (returnValue >> count bitOr:
-		   returnValue << (count negated bitAnd: 31)) bitAnd: 16r7FFFFFFF
+	^ self basicNew
+		  initialize;
+		  useClockBasedSeed;
+		  yourself
 ]
 
 { #category : 'instance creation' }
 Random class >> seed: anInteger [
-	^self new seed: anInteger
+
+	^ self basicNew
+		  initialize;
+		  seed: anInteger;
+		  yourself
 ]
 
 { #category : 'initialization' }
 Random >> initialize [
-	state := DoubleWordArray new: 1.
-	self useClockBasedSeed.
+	"Sender needs to set a seed before using next* API."
+
+	super initialize.
+	state := DoubleWordArray new: 1
 ]
 
 { #category : 'accessing' }
 Random >> maxValue [
-	^16r7FFFFFFF
+
+	^ MaxValue
 ]
 
 { #category : 'accessing' }
 Random >> next [
 	"Answer a random Float in the interval [0 to 1)."
 
-	^ (self privateNextValue / (self maxValue + 1) ) asFloat 
+	^ self privateNextValue asFloat / MaxValuePlusOneAsFloat
 ]
 
 { #category : 'accessing' }
 Random >> next: anInteger [
+
 	^ self next: anInteger into: (Array new: anInteger)
 ]
 
 { #category : 'accessing' }
 Random >> next: anInteger into: anArray [
-	1 to: anInteger do: [:index | anArray at: index put: self next].
+
+	1 to: anInteger do: [ :index | anArray at: index put: self next ].
 	^ anArray
 ]
 
 { #category : 'accessing' }
 Random >> nextBetween: lowerBound and: higherBound [
 	"Answer a random float number from the range [lowerBound, higherBound)"
+
 	^ lowerBound + (self next * (higherBound - lowerBound))
 ]
 
@@ -170,43 +178,58 @@ Random >> nextInteger: anInteger [
 	anInteger strictlyPositive ifFalse: [
 		self error: 'Range must be positive' ].
 
-	^ (self privateNextValue / (self maxValue + 1) * anInteger) truncated
-	  + 1
+	^ (self next * anInteger) truncated + 1
 ]
 
 { #category : 'accessing' }
 Random >> nextIntegerBetween: lowerBound and: higherBound [
 	"Answer a random integer number from the inclusive range [lowerBound, higherBound]"
-	^ lowerBound + (self nextInteger: (higherBound - lowerBound + 1)) - 1
+
+	^ lowerBound + (self nextInteger: higherBound - lowerBound + 1) - 1
 ]
 
 { #category : 'private' }
 Random >> privateNextValue [
-	"Answer a random Float in the interval [0 to 1)."
 
-	^ self class primitiveRandomNumber: state
+	| count returnValue |
+	returnValue := state at: 1.
+	count := returnValue >> 59.
+
+	state
+		at: 1
+		put:
+			(returnValue * 6364136223846793005 + 1442695040888963407 bitAnd:
+				 16rFFFFFFFFFFFFFFFF).
+
+	returnValue := returnValue >> 18 bitXor: returnValue.
+	returnValue := returnValue >> 27 bitAnd: 16rFFFFFFFF.
+
+	^ (returnValue >> count bitOr:
+		returnValue << (count negated bitAnd: 31)) bitAnd: MaxValue
 ]
 
 { #category : 'private' }
 Random >> seed [
 	"Since [1] says...
 	    'After initialization the ideal solution is to hide seed from the user'
-	...this method is placed in the 'private' protocol. Perhaps it sould even be deleted."
+	...this method is placed in the 'private' protocol. Perhaps it should even be deleted."
+
 	^ seed
 ]
 
 { #category : 'initialization' }
 Random >> seed: aNumber [
 	"Refer #privateNextSeed and [1], seed should be positive and less than m"
+
 	seed := aNumber asInteger.
-	self setStateFromSeed.
+	self setStateFromSeed
 ]
 
 { #category : 'initialization' }
 Random >> setStateFromSeed [
 
 	state at: 1 put: seed + 1442695040888963407.
-	self class primitiveRandomNumber: state
+	self privateNextValue
 ]
 
 { #category : 'accessing' }
