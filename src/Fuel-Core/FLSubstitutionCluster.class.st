@@ -76,7 +76,7 @@ FLSubstitutionCluster >> printOn: aStream [
 FLSubstitutionCluster >> registerIndexesOn: anEncoder [
 	substitutions keysAndValuesDo: [ :anObject :theSubstitution | 
 		| substitutionIndex |
-		substitutionIndex := anEncoder objectsIndexes at: theSubstitution.
+		substitutionIndex := anEncoder objectsIndexes indexOf: theSubstitution.
 		anEncoder substitutionIndexes
 			at: anObject
 			put: substitutionIndex ]

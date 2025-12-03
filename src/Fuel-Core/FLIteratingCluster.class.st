@@ -17,7 +17,7 @@ Class {
 FLIteratingCluster >> add: anObject traceWith: aAnalysis [
 	"Add an object to the cluster and trace references."
 
-	(objects addNew: anObject) ifFalse: [ ^ self ].
+	(objects register: anObject) ifFalse: [ ^ self ].
 
 	self 
 		referencesOf: anObject 
@@ -83,7 +83,7 @@ FLIteratingCluster >> materializeInstancesStepWith: aDecoder [
 FLIteratingCluster >> newAnalyzingCollection [
 	"Answer a collection for the objects that correspond to this cluster."
 
-	^ FLObjectIndex new
+	^ FLLeafIndexer new
 ]
 
 { #category : 'accessing' }
@@ -108,6 +108,7 @@ FLIteratingCluster >> printOn: aStream [
 
 { #category : 'accessing' }
 FLIteratingCluster >> references [
+
 	^ references ifNil: [  references := IdentityDictionary new ]
 ]
 
@@ -119,7 +120,7 @@ FLIteratingCluster >> referencesOf: anObject do: aBlock [
 { #category : 'serialize/materialize' }
 FLIteratingCluster >> registerIndexesOn: anEncoder [
 
-	anEncoder objectsIndexes addAll: objects
+	anEncoder objectsIndexes registerChild: objects
 ]
 
 { #category : 'serialize/materialize' }

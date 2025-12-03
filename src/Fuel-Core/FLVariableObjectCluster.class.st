@@ -16,7 +16,7 @@ Class {
 FLVariableObjectCluster >> add: anObject traceWith: aAnalysis [
 	"Add an object to the cluster and trace references."
 
-	(objects addNew: anObject) ifFalse: [ ^ self ].
+	(objects register: anObject) ifFalse: [ ^ self ].
 
 	self 
 		referencesOf: anObject 

@@ -84,7 +84,7 @@ FLEncoder >> encodeReferenceTo: anObject [
 		at: anObject
 		ifAbsent: [
 			objectsIndexes
-				at: anObject
+				indexOf: anObject
 				ifAbsent: [ FLObjectNotFound signalWith: anObject ] ].
 	indexStream nextIndexPut: index
 ]
@@ -92,7 +92,7 @@ FLEncoder >> encodeReferenceTo: anObject [
 { #category : 'encoding' }
 FLEncoder >> encodeReferenceToClusterObjectClass: aClass [ 
 	indexStream nextIndexPut: (objectsIndexes
-		at: aClass
+		indexOf: aClass
 		ifAbsent: [ FLObjectNotFound signalWith: aClass ])
 ]
 
@@ -174,7 +174,7 @@ FLEncoder >> encodeVersion [
 FLEncoder >> encodeWeakReferenceTo: anObject [
 
 	indexStream 
-		nextIndexPut: (objectsIndexes at: anObject ifAbsent: [objectsIndexes at: nil])
+		nextIndexPut: (objectsIndexes indexOf: anObject ifAbsent: [objectsIndexes indexOf: nil])
 ]
 
 { #category : 'encoding' }
@@ -219,7 +219,7 @@ FLEncoder >> objectCount [
 { #category : 'accessing' }
 FLEncoder >> objectCount: aNumber [
 	objectCount := aNumber.
-	objectsIndexes := FLCompositeIndex new.
+	objectsIndexes := FLCompositeIndexer new.
 	substitutionIndexes := IdentityDictionary new.
 	indexStream := FLIndexStream on: stream digits: aNumber bytesCount
 ]
