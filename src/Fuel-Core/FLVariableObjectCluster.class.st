@@ -15,7 +15,8 @@ Class {
 { #category : 'analyzing' }
 FLVariableObjectCluster >> add: anObject traceWith: aAnalysis [
 	"Add an object to the cluster and trace references."
-	objects addIfNotPresent: anObject ifPresentDo: [ ^ self ].
+
+	(objects addNew: anObject) ifFalse: [ ^ self ].
 
 	self 
 		referencesOf: anObject 

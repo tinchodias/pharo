@@ -17,7 +17,7 @@ Class {
 FLIteratingCluster >> add: anObject traceWith: aAnalysis [
 	"Add an object to the cluster and trace references."
 
-	objects addIfNotPresent: anObject ifPresentDo: [ ^ self ].
+	(objects addNew: anObject) ifFalse: [ ^ self ].
 
 	self 
 		referencesOf: anObject 
@@ -83,7 +83,7 @@ FLIteratingCluster >> materializeInstancesStepWith: aDecoder [
 FLIteratingCluster >> newAnalyzingCollection [
 	"Answer a collection for the objects that correspond to this cluster."
 
-	^ IdentitySet new
+	^ FLObjectIndex new
 ]
 
 { #category : 'accessing' }
@@ -118,12 +118,8 @@ FLIteratingCluster >> referencesOf: anObject do: aBlock [
 
 { #category : 'serialize/materialize' }
 FLIteratingCluster >> registerIndexesOn: anEncoder [
-	| indexes |
-	indexes := anEncoder objectsIndexes.
-	self objects do: [ :instance |
-		indexes
-			at: instance
-			put: indexes size + 1 ]
+
+	anEncoder objectsIndexes addAll: objects
 ]
 
 { #category : 'serialize/materialize' }
