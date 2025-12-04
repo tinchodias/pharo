@@ -218,8 +218,9 @@ FLEncoder >> objectCount [
 
 { #category : 'accessing' }
 FLEncoder >> objectCount: aNumber [
+
 	objectCount := aNumber.
-	objectsIndexes := FLCompositeIndexer new.
+	objectsIndexes := FLEncoderIndexer new: aNumber.
 	substitutionIndexes := IdentityDictionary new.
 	indexStream := FLIndexStream on: stream digits: aNumber bytesCount
 ]
@@ -227,6 +228,12 @@ FLEncoder >> objectCount: aNumber [
 { #category : 'accessing' }
 FLEncoder >> objectsIndexes [
 	^ objectsIndexes
+]
+
+{ #category : 'accessing' }
+FLEncoder >> registerAll: aFLClusterIndexer [
+
+	objectsIndexes registerAll: aFLClusterIndexer
 ]
 
 { #category : 'accessing' }

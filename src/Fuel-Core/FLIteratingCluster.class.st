@@ -83,7 +83,7 @@ FLIteratingCluster >> materializeInstancesStepWith: aDecoder [
 FLIteratingCluster >> newAnalyzingCollection [
 	"Answer a collection for the objects that correspond to this cluster."
 
-	^ FLLeafIndexer new
+	^ FLClusterIndexer new
 ]
 
 { #category : 'accessing' }
@@ -120,7 +120,7 @@ FLIteratingCluster >> referencesOf: anObject do: aBlock [
 { #category : 'serialize/materialize' }
 FLIteratingCluster >> registerIndexesOn: anEncoder [
 
-	anEncoder objectsIndexes registerChild: objects
+	anEncoder registerAll: objects
 ]
 
 { #category : 'serialize/materialize' }
