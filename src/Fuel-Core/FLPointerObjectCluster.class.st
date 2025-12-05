@@ -37,9 +37,7 @@ FLPointerObjectCluster >> clusterSerializeStepWith: anEncoder [
 FLPointerObjectCluster >> initializeAnalyzing: aClass [
 
 	super initializeAnalyzing: aClass.
-	variablesMapping := FLVariablesMapping 
-		newAnalyzing: theClass
-		references: self references
+	variablesMapping := FLVariablesMapping newAnalyzing: theClass
 ]
 
 { #category : 'serialize/materialize' }

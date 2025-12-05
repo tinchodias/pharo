@@ -5,8 +5,7 @@ Class {
 	#name : 'FLIteratingCluster',
 	#superclass : 'FLCluster',
 	#instVars : [
-		'objects',
-		'references'
+		'objects'
 	],
 	#category : 'Fuel-Core-Clusters',
 	#package : 'Fuel-Core',
@@ -19,11 +18,7 @@ FLIteratingCluster >> add: anObject traceWith: aAnalysis [
 
 	(objects register: anObject) ifFalse: [ ^ self ].
 
-	self 
-		referencesOf: anObject 
-		do: [ :aChild |
-			self addReferenceFrom: anObject to: aChild.
-			aAnalysis trace: aChild ]
+	self referencesOf: anObject do: [ :each | aAnalysis trace: each ]
 ]
 
 { #category : 'analyzing' }
@@ -104,12 +99,6 @@ FLIteratingCluster >> printOn: aStream [
 	self printNameOn: aStream.
 	aStream nextPutAll: '->'.
 	objects printElementsOn: aStream
-]
-
-{ #category : 'accessing' }
-FLIteratingCluster >> references [
-
-	^ references ifNil: [  references := IdentityDictionary new ]
 ]
 
 { #category : 'analyzing' }

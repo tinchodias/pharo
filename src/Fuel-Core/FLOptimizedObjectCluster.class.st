@@ -35,8 +35,10 @@ FLOptimizedObjectCluster >> serializeInstancesStepWith: anEncoder [
 
 { #category : 'serialize/materialize' }
 FLOptimizedObjectCluster >> serializeReferencesOf: anObject with: anEncoder [
-	(self references at: anObject ifAbsent: [ ^ self ]) do: [ :value |
-		anEncoder encodeReferenceTo: value ]
+
+	self 
+		referencesOf: anObject 
+		do: [ :each | anEncoder encodeReferenceTo: each ]
 ]
 
 { #category : 'serialize/materialize' }

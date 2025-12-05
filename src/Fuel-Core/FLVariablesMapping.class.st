@@ -14,7 +14,6 @@ Class {
 		'mapping',
 		'theClass',
 		'notIgnoredVariables',
-		'references',
 		'possibleTraitVariables'
 	],
 	#category : 'Fuel-Core-Clusters',
@@ -32,12 +31,12 @@ FLVariablesMapping class >> materializing: aClass from: aDecoder [
 ]
 
 { #category : 'instance creation' }
-FLVariablesMapping class >> newAnalyzing: anAnalysis references: aCollection [
-
+FLVariablesMapping class >> newAnalyzing: aClass [
+	
 	^ self basicNew
-		initializeWithClass: anAnalysis references: aCollection;
+		initializeWithClass: aClass;
 		initializeAnalyzing;
-		yourself
+		yourself.
 ]
 
 { #category : 'serialize/materialize' }
@@ -71,13 +70,6 @@ FLVariablesMapping >> initializeWithClass: aClass [
 	theClass := aClass
 ]
 
-{ #category : 'initialization' }
-FLVariablesMapping >> initializeWithClass: aClass references: aCollection [
-	self initialize.
-	theClass := aClass.
-	references := aCollection
-]
-
 { #category : 'private' }
 FLVariablesMapping >> instanceVariableNamesToSerialize [
 
@@ -97,12 +89,13 @@ FLVariablesMapping >> map: sourceName to: destinationName [
 
 	| indexOfVariableToMap |
 	indexOfVariableToMap := notIgnoredVariables indexOf: sourceName.
-	indexOfVariableToMap > 0
-		ifTrue: [ mapping 
-			at: indexOfVariableToMap 
-			put: (theClass
-				instVarIndexFor: destinationName
-				ifAbsent: [self error: 'Bad variable destination.'])].
+	indexOfVariableToMap > 0 ifTrue: [
+		mapping
+			at: indexOfVariableToMap
+			put:
+				(theClass
+					instVarIndexFor: destinationName
+					ifAbsent: [ self error: 'Bad variable destination.' ]) ]
 ]
 
 { #category : 'serialize/materialize' }
@@ -148,11 +141,6 @@ FLVariablesMapping >> materializeTraitVariablesWith: anObject [
 					ifAbsent: nil) ] ]
 ]
 
-{ #category : 'accessing' }
-FLVariablesMapping >> references [
-	^ references
-]
-
 { #category : 'analyzing' }
 FLVariablesMapping >> referencesOf: anObject do: aBlock [
 
@@ -169,6 +157,6 @@ FLVariablesMapping >> serializeOn: anEncoder [
 { #category : 'serialize/materialize' }
 FLVariablesMapping >> serializeReferencesOf: anObject with: anEncoder [ 
 
-	(self references at: anObject ifAbsent: [ ^ self ]) do: [ :value |
-		anEncoder encodeReferenceTo: value ].
+	mapping do: [ :index | 
+		anEncoder encodeReferenceTo: (anObject instVarAt: index) ].
 ]

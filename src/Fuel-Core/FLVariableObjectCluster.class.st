@@ -18,17 +18,9 @@ FLVariableObjectCluster >> add: anObject traceWith: aAnalysis [
 
 	(objects register: anObject) ifFalse: [ ^ self ].
 
-	self 
-		referencesOf: anObject 
-		do: [ :aChild |
-			self addReferenceFrom: anObject to: aChild.
-			aAnalysis trace: aChild ].
-		
-	self
-		variablePartReferencesOf: anObject
-		do: [ :aChild |
-			self addVariableReferenceFrom: anObject to: aChild.
-			aAnalysis trace: aChild ]
+	self referencesOf: anObject do: [ :each | aAnalysis trace: each ].
+
+	self variablePartReferencesOf: anObject do: [ :each | aAnalysis trace: each ]
 ]
 
 { #category : 'analyzing' }
@@ -86,9 +78,10 @@ FLVariableObjectCluster >> serializeReferencesOf: anObject with: anEncoder [
 
 { #category : 'serialize/materialize' }
 FLVariableObjectCluster >> serializeReferencesVariablePartOf: anObject with: anEncoder [
-	
-	(self variableReferences at: anObject ifAbsent: [ ^ self ]) do: [ :value |
-		anEncoder encodeReferenceTo: value ]
+
+	self
+		variablePartReferencesOf: anObject
+		do: [ :each | anEncoder encodeReferenceTo: each ]
 ]
 
 { #category : 'analyzing' }

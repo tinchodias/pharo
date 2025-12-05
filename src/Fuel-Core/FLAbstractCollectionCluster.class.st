@@ -59,15 +59,14 @@ FLAbstractCollectionCluster >> serializeInstance: anObject with: anEncoder [
 
 { #category : 'serialize/materialize' }
 FLAbstractCollectionCluster >> serializeReferencesOf: anObject with: anEncoder [
+
 	self
 		encodeExtraInformationForReferencesFor: anObject with: anEncoder;
 		encodeSizeOf: anObject with: anEncoder.
 	
-	self references
-		at: anObject
-		ifPresent: [ :refs |
-			refs do: [ :ref |
-				anEncoder encodeReferenceTo: ref ] ]
+	self 
+		referencesOf: anObject 
+		do: [ :each | anEncoder encodeReferenceTo: each ]
 ]
 
 { #category : 'serialize/materialize' }
