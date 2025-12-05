@@ -84,7 +84,7 @@ FLEncoder >> encodeReferenceTo: anObject [
 		at: anObject
 		ifAbsent: [
 			objectsIndexes
-				indexOf: anObject
+				at: anObject
 				ifAbsent: [ FLObjectNotFound signalWith: anObject ] ].
 	indexStream nextIndexPut: index
 ]
@@ -92,7 +92,7 @@ FLEncoder >> encodeReferenceTo: anObject [
 { #category : 'encoding' }
 FLEncoder >> encodeReferenceToClusterObjectClass: aClass [ 
 	indexStream nextIndexPut: (objectsIndexes
-		indexOf: aClass
+		at: aClass
 		ifAbsent: [ FLObjectNotFound signalWith: aClass ])
 ]
 
@@ -173,8 +173,10 @@ FLEncoder >> encodeVersion [
 { #category : 'encoding' }
 FLEncoder >> encodeWeakReferenceTo: anObject [
 
-	indexStream 
-		nextIndexPut: (objectsIndexes indexOf: anObject ifAbsent: [objectsIndexes indexOf: nil])
+	indexStream nextIndexPut:
+		(objectsIndexes
+			at: anObject
+			ifAbsent: [ objectsIndexes at: nil ])
 ]
 
 { #category : 'encoding' }
@@ -220,7 +222,7 @@ FLEncoder >> objectCount [
 FLEncoder >> objectCount: aNumber [
 
 	objectCount := aNumber.
-	objectsIndexes := FLEncoderIndexer new: aNumber.
+	objectsIndexes := IdentityDictionary new: aNumber.
 	substitutionIndexes := IdentityDictionary new.
 	indexStream := FLIndexStream on: stream digits: aNumber bytesCount
 ]
@@ -233,7 +235,11 @@ FLEncoder >> objectsIndexes [
 { #category : 'accessing' }
 FLEncoder >> registerAll: aFLClusterIndexer [
 
-	objectsIndexes registerAll: aFLClusterIndexer
+	| offset |
+	offset := objectsIndexes size.
+
+	aFLClusterIndexer withIndexDo: [ :anObject :index |
+		objectsIndexes at: anObject put: index + offset ]
 ]
 
 { #category : 'accessing' }

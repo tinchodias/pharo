@@ -83,7 +83,7 @@ FLIteratingCluster >> materializeInstancesStepWith: aDecoder [
 FLIteratingCluster >> newAnalyzingCollection [
 	"Answer a collection for the objects that correspond to this cluster."
 
-	^ FLClusterIndexer new
+	^ FLIndexer new
 ]
 
 { #category : 'accessing' }
