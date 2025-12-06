@@ -43,20 +43,23 @@ FLDictionaryCollectionCluster >> hasRealAssociations: aDictionary [
 
 { #category : 'initialization' }
 FLDictionaryCollectionCluster >> initialize [
+
 	super initialize.
-	
+
 	ephemeronKeys := OrderedCollection new
 ]
 
 { #category : 'serialize/materialize' }
 FLDictionaryCollectionCluster >> materializeAssociationsOf: aDictionary from: aDecoder [
-	aDecoder nextEncodedUint32 timesRepeat: [
+
+	aDecoder nextEncodedPositiveInteger timesRepeat: [
 		aDictionary add: aDecoder nextEncodedReference ]
 ]
 
 { #category : 'serialize/materialize' }
 FLDictionaryCollectionCluster >> materializeKeysAndValuesOf: aDictionary from: aDecoder [
-	aDecoder nextEncodedUint32 timesRepeat: [
+
+	aDecoder nextEncodedPositiveInteger timesRepeat: [
 		aDictionary add: aDecoder nextEncodedReference -> aDecoder nextEncodedReference ]
 ]
 

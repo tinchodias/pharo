@@ -47,7 +47,7 @@ FLVariableObjectCluster >> afterMaterializationStepWith: aDecoder [
 { #category : 'serialize/materialize' }
 FLVariableObjectCluster >> materializeInstanceWith: aDecoder [
 
-	^theClass fuelNew: aDecoder nextEncodedUint32
+	^ theClass fuelNew: aDecoder nextEncodedPositiveInteger
 ]
 
 { #category : 'serialize/materialize' }
@@ -66,7 +66,8 @@ FLVariableObjectCluster >> materializeReferencesVariablePartOf: anObject with: a
 
 { #category : 'serialize/materialize' }
 FLVariableObjectCluster >> serializeInstance: anObject with: anEncoder [
-	anEncoder encodeUint32: anObject basicSize
+
+	anEncoder encodePositiveInteger: anObject basicSize
 ]
 
 { #category : 'serialize/materialize' }

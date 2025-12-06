@@ -77,7 +77,7 @@ FLMaterialization >> clusterPostMaterializationStep [
 { #category : 'private' }
 FLMaterialization >> decoderHeaderStep [
 	decoder decodeYourself.
-	clusterCount := decoder nextEncodedUint32.
+	clusterCount := decoder nextEncodedPositiveInteger.
 	clusters := OrderedCollection new: clusterCount.
 	clusters resetTo: 1. "Hack that avoids OrderedCollection>>makeRoomAtLast"
 ]

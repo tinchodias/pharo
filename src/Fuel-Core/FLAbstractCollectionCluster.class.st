@@ -28,13 +28,14 @@ FLAbstractCollectionCluster >> encodeExtraInformationForReferencesFor: anObject 
 
 { #category : 'serialize/materialize' }
 FLAbstractCollectionCluster >> encodeSizeOf: anObject with: anEncoder [
-	anEncoder encodeUint32: anObject size
+
+	anEncoder encodePositiveInteger: anObject size
 ]
 
 { #category : 'serialize/materialize' }
 FLAbstractCollectionCluster >> materializeInstanceWith: aDecoder [
 
-	^theClass new: aDecoder nextEncodedUint32
+	^ theClass new: aDecoder nextEncodedPositiveInteger
 ]
 
 { #category : 'serialize/materialize' }

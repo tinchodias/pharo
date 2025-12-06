@@ -23,8 +23,8 @@ Class {
 FLVersion class >> current [
 	^ Current ifNil: [
 		Current := self
-			newWithMajor: 5
-			minor: 2
+			newWithMajor: 6
+			minor: 0
 			patch: 0 ]
 ]
 

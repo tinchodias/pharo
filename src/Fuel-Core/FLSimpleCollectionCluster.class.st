@@ -11,7 +11,8 @@ Class {
 
 { #category : 'serialize/materialize' }
 FLSimpleCollectionCluster >> materializeReferencesOf: anObject with: aDecoder [
-	aDecoder nextEncodedUint32 timesRepeat: [
+
+	aDecoder nextEncodedPositiveInteger timesRepeat: [
 		anObject add: aDecoder nextEncodedReference ]
 ]
 

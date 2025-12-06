@@ -72,7 +72,7 @@ FLSerialization >> clustersSortedByAmountOfObjects [
 FLSerialization >> encoderHeaderStep [
 	encoder
 		encodeYourself;
-		encodeUint32: clusters size
+		encodePositiveInteger: clusters size
 ]
 
 { #category : 'private' }

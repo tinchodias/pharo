@@ -77,6 +77,23 @@ FLEncoder >> encodeInt64: aSmallInteger [
 	self encodeUint64: (aSmallInteger bitAnd: 16r1FFFFFFFFFFFFFFF)
 ]
 
+{ #category : 'Protocol (encoding) - 22 selector(s)' }
+FLEncoder >> encodePositiveInteger: anInteger [
+	"Store length of integer encoded in a way that the presence of a
+	most significant bit indicates that the next byte is part of
+	the value.
+	Based on Soil encoding."
+
+	| current |
+	current := anInteger.
+
+	[ current >= 128 ] whileTrue: [.
+		stream nextPut: ((current bitAnd: 127) bitOr: 128).
+		current := current bitShift: -7 ].
+
+	stream nextPut: current
+]
+
 { #category : 'encoding' }
 FLEncoder >> encodeReferenceTo: anObject [
 	| index |

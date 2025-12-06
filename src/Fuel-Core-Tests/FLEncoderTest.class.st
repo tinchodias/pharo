@@ -126,6 +126,31 @@ FLEncoderTest >> testEncodeInt64Truncated [
 ]
 
 { #category : 'tests' }
+FLEncoderTest >> testEncodePositiveInteger [
+
+	encoder encodePositiveInteger: 0.
+	self assert: self getResult equals: #[ 0 ].
+	
+	encoder encodePositiveInteger: 17.
+	self assert: self getResult equals: #[ 17 ].
+	
+	encoder encodePositiveInteger: (2 raisedTo: 8) - 1.
+	self assert: self getResult equals: #[ 255 1 ].
+
+	encoder encodePositiveInteger: (2 raisedTo: 16) - 1.
+	self assert: self getResult equals: #[ 255 255 3 ].
+
+	encoder encodePositiveInteger: (2 raisedTo: 24) - 1.
+	self assert: self getResult equals: #[ 255 255 255 7 ].
+
+	encoder encodePositiveInteger: (2 raisedTo: 32) - 1.
+	self assert: self getResult equals: #[ 255 255 255 255 15 ].
+
+	encoder encodePositiveInteger: (2 raisedTo: 64) - 1.
+	self assert: self getResult equals: #[ 255 255 255 255 255 255 255 255 255 1 ]
+]
+
+{ #category : 'tests' }
 FLEncoderTest >> testEncodeUInt8 [
 	encoder encodeUint8: 0.
 	self assert: self getResult equals: #[0].

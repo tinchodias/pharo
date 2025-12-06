@@ -9,11 +9,11 @@ Character >> fuelAccept: aGeneralMapper [
 { #category : '*Fuel-Core' }
 Character class >> materializeFrom: aDecoder [
 
-	^self value: aDecoder nextEncodedUint32
+	^self value: aDecoder nextEncodedPositiveInteger
 ]
 
 { #category : '*Fuel-Core' }
 Character >> serializeOn: anEncoder [
 
-	anEncoder encodeUint32: self asInteger
+	anEncoder encodePositiveInteger: self asInteger
 ]

@@ -126,6 +126,53 @@ FLDecoderTest >> testNextEncodedInt64 [
 ]
 
 { #category : 'tests' }
+FLDecoderTest >> testNextEncodedPositiveInteger [
+
+	stream 
+		nextPutAll: #[ 0 ];
+		reset.
+	self assert: decoder nextEncodedPositiveInteger equals: 0.
+	
+	stream
+		resetToStart;
+		nextPutAll: #[ 17 ];
+		reset.
+	self assert: decoder nextEncodedPositiveInteger equals: 17.
+
+
+	stream
+		resetToStart;
+		nextPutAll: #[ 255 1 ];
+		reset.
+	self assert: decoder nextEncodedPositiveInteger equals: (2 raisedTo: 8) - 1.
+
+	stream
+		resetToStart;
+		nextPutAll: #[ 255 255 3 ];
+		reset.
+	self assert: decoder nextEncodedPositiveInteger equals: (2 raisedTo: 16) - 1.
+
+
+	stream
+		resetToStart;
+		nextPutAll: #[ 255 255 255 7 ];
+		reset.
+	self assert: decoder nextEncodedPositiveInteger equals: (2 raisedTo: 24) - 1.
+	
+	stream
+		resetToStart;
+		nextPutAll: #[ 255 255 255 255 15 ];
+		reset.
+	self assert: decoder nextEncodedPositiveInteger equals: (2 raisedTo: 32) - 1.
+
+	stream
+		resetToStart;
+		nextPutAll: #[ 255 255 255 255 255 255 255 255 255 1 ];
+		reset.
+	self assert: decoder nextEncodedPositiveInteger equals: (2 raisedTo: 64) - 1
+]
+
+{ #category : 'tests' }
 FLDecoderTest >> testNextEncodedUint16 [
 	stream 
 		nextPutAll: #[0 0];

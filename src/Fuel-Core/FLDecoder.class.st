@@ -180,6 +180,16 @@ FLDecoder >> nextEncodedInt64 [
 ]
 
 { #category : 'decoding' }
+FLDecoder >> nextEncodedPositiveInteger [
+	"Based on Soil encoding"
+
+	| value |
+	value := stream next.
+	value < 128 ifTrue: [ ^ value ].
+	^ (self nextEncodedPositiveInteger bitShift: 7) bitOr: (value bitAnd: 127)
+]
+
+{ #category : 'decoding' }
 FLDecoder >> nextEncodedReference [ 
 
 	^ objects at: indexStream nextIndex
